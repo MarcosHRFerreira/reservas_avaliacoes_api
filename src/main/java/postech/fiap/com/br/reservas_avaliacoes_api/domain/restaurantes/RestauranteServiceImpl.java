@@ -4,10 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 import java.util.List;
@@ -17,14 +17,13 @@ public class RestauranteServiceImpl implements RestauranteService {
 
     private final RestauranteRepository restauranteRepository;
 
-
     public RestauranteServiceImpl(RestauranteRepository restauranteRepository) {
         this.restauranteRepository = restauranteRepository;
     }
 
     @Override
+    @Transactional
     public RestauranteEntity criar(RestauranteEntity restauranteEntity) {
-
         return  restauranteRepository.save(restauranteEntity);
     }
 
@@ -49,6 +48,7 @@ public class RestauranteServiceImpl implements RestauranteService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> atualizarRestaurante(DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto) {
 
         try {
@@ -57,6 +57,7 @@ public class RestauranteServiceImpl implements RestauranteService {
             }
             var restaurante=restauranteRepository.getReferenceById (dadosAtualizacaoRestauranteDto.id_restaurante());
             restaurante.atualizarInformacoes(dadosAtualizacaoRestauranteDto);
+
             return ResponseEntity.ok(new DadosDetalhamentoRestauranteDto(restaurante));
         }catch (ValidacaoException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

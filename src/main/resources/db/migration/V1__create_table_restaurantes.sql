@@ -1,8 +1,8 @@
--- Criação do banco de dados
 CREATE TABLE Restaurantes (
     ID_restaurante SERIAL NOT NULL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email varchar(100) not null unique,
+    telefone CHARACTER(50) NOT NULL,
     logradouro VARCHAR(100) ,
     bairro VARCHAR(100) NOT NULL,
     cep CHAR(9) NOT NULL,

@@ -16,7 +16,7 @@ import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.Restauran
 import java.util.List;
 
 @RestController
-@RequestMapping(value ="/restaurantes")
+@RequestMapping("restaurantes")
 public class RestauranteController {
 
    private final RestauranteService restauranteService;

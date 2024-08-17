@@ -1,5 +1,4 @@
-package postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes;
-
+package postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,19 +6,19 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Table(name = "restaurantes")
-@Entity(name = "RestauranteEntity")
+@Table(name = "clientes")
+@Entity(name = "ClienteEntity")
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+public class ClienteEntity {
 
-public class RestauranteEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    private Long id_restaurante;
+    private Long id_cliente;
 
     private String nome;
 
@@ -42,7 +41,7 @@ public class RestauranteEntity {
     private String cidade;
 
 
-    public void atualizarInformacoes(DadosAtualizacaoRestauranteDto dados){
+    public void atualizarInformacoes(DadosAtualizacaoClienteDto dados){
 
         if(dados.nome() != null ){
             this.nome=dados.nome().toUpperCase();
@@ -74,10 +73,5 @@ public class RestauranteEntity {
         if(dados.cidade() != null){
             this.cidade=dados.cidade().toUpperCase();
         }
-
     }
-
 }
-
-
-
