@@ -27,13 +27,10 @@ public class CozinhaController {
     @PostMapping
     @Transactional
     public CozinhaEntity criar(@RequestBody CozinhaEntity cozinhaEntity){
-
         return this.cozinhaService.criar(cozinhaEntity);
     }
-
     @GetMapping
     public List<CozinhaEntity> obterTodos(){
-
         return this.cozinhaService.obterTodos();
     }
     @GetMapping("/pagina-cozinha")
@@ -49,5 +46,4 @@ public class CozinhaController {
     public ResponseEntity atualizarCozinha(@Valid @RequestBody DadosAtualizacaoCozinhaDto dadosAtualizacaoCozinhaDto) {
         return this.cozinhaService.atualizarCozinha(dadosAtualizacaoCozinhaDto);
     }
-
 }
