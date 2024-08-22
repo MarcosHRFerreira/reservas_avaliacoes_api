@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.DadosAtualizacaoRestauranteDto;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteService;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes_cozinhas.Restaurante_CozinhaEntity;
+import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
+
 import java.util.List;
 
 @RestController
@@ -22,26 +25,27 @@ public class RestauranteController {
     public RestauranteController(RestauranteService restauranteService) {
         this.restauranteService = restauranteService;
     }
-    @PostMapping
+    @PostMapping("/cadastrar")
     @Transactional
-    public RestauranteEntity criar(@RequestBody RestauranteEntity restauranteEntity){
-        return this.restauranteService.criar(restauranteEntity);
+    public ResponseEntity<?> cadastrar(@RequestBody RestauranteEntity restauranteEntity){
+        return this.restauranteService.cadastrar(restauranteEntity);
     }
-    @GetMapping
-    public List<RestauranteEntity> obterTodos(){
-        return this.restauranteService.obterTodos();
+    @PutMapping("/atualizar")
+    public ResponseEntity<?> atualizar(@Valid @RequestBody DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto) {
+        return this.restauranteService.atualizar(dadosAtualizacaoRestauranteDto);
     }
-    @GetMapping("/pagina-restaurantes")
-    public ResponseEntity<Page<RestauranteEntity>> obterRestaurantesPaginados(@PageableDefault(size = 10) Pageable pageable){
-        Page<RestauranteEntity> restaurantes = this.restauranteService.listaRestaurantes(pageable);
+    @GetMapping("/paginar")
+    public ResponseEntity<Page<RestauranteEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
+        Page<RestauranteEntity> restaurantes = this.restauranteService.obterPaginados(pageable);
         return ResponseEntity.ok(restaurantes);
     }
     @GetMapping("/{codigo}")
-    public RestauranteEntity obterPorCodigo(@PathVariable Long codigo){
-        return this.restauranteService.obterPorCodigo(codigo);
-    }
-    @PutMapping("/atualiza-restaurante")
-    public ResponseEntity<?> atualizarRestaurante(@Valid @RequestBody DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto) {
-        return this.restauranteService.atualizarRestaurante(dadosAtualizacaoRestauranteDto);
+    public ResponseEntity<RestauranteEntity> obterPorCodigo(@PathVariable Long codigo) {
+        try {
+            RestauranteEntity restaurante = this.restauranteService.obterPorCodigo(codigo);
+            return ResponseEntity.ok(restaurante);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

@@ -31,4 +31,5 @@ public class CozinhaEntity {
             this.especialidade = dados.especialidade().toUpperCase();
         }
     }
+
 }

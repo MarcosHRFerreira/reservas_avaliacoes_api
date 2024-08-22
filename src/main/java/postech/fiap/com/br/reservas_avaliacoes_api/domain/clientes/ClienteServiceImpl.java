@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoEntity;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.DadosDetalhamentoRestauranteDto;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 import java.util.List;
@@ -20,37 +22,26 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteServiceImpl(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
-
     @Override
     @Transactional
-    public ClienteEntity criar(ClienteEntity clienteEntity) {
-        return  clienteRepository.save(clienteEntity);
+    public  ResponseEntity<?> cadastrar(ClienteEntity clienteEntity) {
+        try {
+            if (clienteRepository.existsBynomeAndEmail(clienteEntity.getNome(), clienteEntity.getEmail())) {
+                throw new ValidacaoException("Já existe o Nome e o email na base");
+            }
+            if (clienteRepository.existsByEmail (clienteEntity.getEmail()))
+            {
+                throw new ValidacaoException("Já existe o email " + clienteEntity.getEmail() + " na base de clientes");
+            }
+            var cliente=clienteRepository.save(clienteEntity);
+            return ResponseEntity.ok(new DadosDetalhamentoClienteDto(cliente));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Erro ao cadastrar: " + e.getMessage());
+        }
     }
-
-    @Override
-    public List<ClienteEntity> obterTodos() {
-        return this.clienteRepository.findAll();
-    }
-
-    public Page<ClienteEntity> listaClientes(Pageable pageable) {
-        Sort sort = Sort.by("nome").ascending();
-        Pageable paginacao =
-                PageRequest.of(pageable.getPageNumber(),
-                        pageable.getPageSize(), sort);
-        return this.clienteRepository.findAll(paginacao);
-    }
-
-    @Override
-    public ClienteEntity obterPorCodigo(Long codigo) {
-        return this.clienteRepository
-                .findById(codigo)
-                .orElseThrow(()-> new IllegalArgumentException("Cliente não existe!"));
-    }
-
     @Override
     @Transactional
-    public ResponseEntity atualizarCliente(DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto) {
-
+    public ResponseEntity atualizar(DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto) {
         try {
             if (!clienteRepository.existsById(dadosAtualizacaoClienteDto.id_cliente())) {
                 throw new ValidacaoException("Id do Cliente informado não existe!");
@@ -61,7 +52,19 @@ public class ClienteServiceImpl implements ClienteService {
         }catch (ValidacaoException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
 
+    public Page<ClienteEntity> obterPaginados(Pageable pageable) {
+        Sort sort = Sort.by("nome").ascending();
+        Pageable paginacao =
+                PageRequest.of(pageable.getPageNumber(),
+                        pageable.getPageSize(), sort);
+        return this.clienteRepository.findAll(paginacao);
+    }
+    @Override
+    public ClienteEntity obterPorCodigo(Long codigo) {
+        return clienteRepository.findById(codigo)
+                .orElseThrow(() -> new ValidacaoException("Id da Cliente informado não existe!"));
     }
 
 }

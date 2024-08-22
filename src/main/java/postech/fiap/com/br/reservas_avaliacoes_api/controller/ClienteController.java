@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes.ClienteEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes.ClienteService;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes.DadosAtualizacaoClienteDto;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas.ReservaEntity;
+import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 
 import java.util.List;
@@ -24,26 +26,27 @@ public class ClienteController {
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
-    @PostMapping
+    @PostMapping("/cadastrar")
     @Transactional
-    public ClienteEntity criar(@RequestBody ClienteEntity clienteEntity){
-        return this.clienteService.criar(clienteEntity);
+    public ResponseEntity<?> cadastrar(@RequestBody ClienteEntity clienteEntity){
+        return this.clienteService.cadastrar(clienteEntity);
     }
-    @GetMapping
-    public List<ClienteEntity> obterTodos(){
-        return this.clienteService.obterTodos();
+    @PutMapping("/atualizar")
+    public ResponseEntity atualizar(@Valid @RequestBody DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto) {
+        return this.clienteService.atualizar(dadosAtualizacaoClienteDto);
     }
-    @GetMapping("/pagina-clientes")
-    public ResponseEntity<Page<ClienteEntity>> obterClientesPaginados(@PageableDefault(size = 10) Pageable pageable){
-        Page<ClienteEntity> clientes = this.clienteService.listaClientes(pageable);
+    @GetMapping("/paginar")
+    public ResponseEntity<Page<ClienteEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
+        Page<ClienteEntity> clientes = this.clienteService.obterPaginados(pageable);
         return ResponseEntity.ok(clientes);
     }
     @GetMapping("/{codigo}")
-    public ClienteEntity obterPorCodigo(@PathVariable Long codigo){
-        return this.clienteService.obterPorCodigo(codigo);
-    }
-    @PutMapping("/atualiza-cliente")
-    public ResponseEntity atualizarCliente(@Valid @RequestBody DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto) {
-        return this.clienteService.atualizarCliente(dadosAtualizacaoClienteDto);
+    public ResponseEntity<ClienteEntity> obterPorCodigo(@PathVariable Long codigo) {
+        try {
+            ClienteEntity cliente = this.clienteService.obterPorCodigo(codigo);
+            return ResponseEntity.ok(cliente);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

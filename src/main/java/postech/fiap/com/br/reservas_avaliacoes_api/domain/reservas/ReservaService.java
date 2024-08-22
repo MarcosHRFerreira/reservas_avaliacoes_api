@@ -12,13 +12,11 @@ import java.util.List;
 @Service
 public interface ReservaService {
 
-    public ResponseEntity criar(ReservaEntity reservaEntity);
+    public ResponseEntity cadastrar(ReservaEntity reservaEntity);
 
-    public ResponseEntity<?> atualizarReserva(DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto);
+    public ResponseEntity<?> atualizar(DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto);
 
-    public List<ReservaEntity> obterTodos();
-
-    public Page<ReservaEntity> obterReservasPaginados(@PageableDefault(size = 10) Pageable pageable);
+    public Page<ReservaEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
     public ReservaEntity obterPorCodigo(Long codigo);
 

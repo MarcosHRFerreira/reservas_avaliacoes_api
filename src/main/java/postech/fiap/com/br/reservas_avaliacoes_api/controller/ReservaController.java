@@ -27,26 +27,20 @@ public class ReservaController {
     public ReservaController(ReservaService reservaService) {
         this.reservaService = reservaService;
     }
-
-    @PostMapping
+    @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity criar(@RequestBody ReservaEntity reservaEntity){
-        return this.reservaService.criar(reservaEntity);
+    public ResponseEntity cadastrar(@RequestBody ReservaEntity reservaEntity){
+        return this.reservaService.cadastrar(reservaEntity);
     }
-    @PutMapping("/atualiza-reserva")
-    public ResponseEntity atualizarReserva(@Valid @RequestBody DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto) {
-        return this.reservaService.atualizarReserva(dadosAtualizacaoReservaDto);
+    @PutMapping("/atualizar")
+    public ResponseEntity atualizar(@Valid @RequestBody DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto) {
+        return this.reservaService.atualizar(dadosAtualizacaoReservaDto);
     }
-    @GetMapping
-    public List<ReservaEntity> obterTodos(){
-        return this.reservaService.obterTodos();
-    }
-    @GetMapping("/pagina-reserva")
-    public ResponseEntity<Page<ReservaEntity>> obterReservasPaginados(@PageableDefault(size = 10) Pageable pageable){
-        Page<ReservaEntity> reservas = this.reservaService.obterReservasPaginados(pageable);
+    @GetMapping("/paginar")
+    public ResponseEntity<Page<ReservaEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
+        Page<ReservaEntity> reservas = this.reservaService.obterPaginados(pageable);
         return ResponseEntity.ok(reservas);
     }
-
     @GetMapping("/{codigo}")
     public ResponseEntity<ReservaEntity> obterPorCodigo(@PathVariable Long codigo) {
         try {
@@ -56,6 +50,4 @@ public class ReservaController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 }

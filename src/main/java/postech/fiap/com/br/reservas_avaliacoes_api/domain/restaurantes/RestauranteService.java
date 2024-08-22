@@ -10,14 +10,12 @@ import java.util.List;
 
 public interface RestauranteService {
 
-    public RestauranteEntity criar(RestauranteEntity restauranteEntity);
+    public ResponseEntity<?> cadastrar(RestauranteEntity restauranteEntity);
 
-    public List<RestauranteEntity> obterTodos();
-
-    public Page<RestauranteEntity> listaRestaurantes(@PageableDefault(size = 10) Pageable pageable);
+    public Page<RestauranteEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
     public RestauranteEntity obterPorCodigo(Long codigo);
 
-    public ResponseEntity<?> atualizarRestaurante(DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto);
+    public ResponseEntity<?> atualizar(DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto);
 
 }

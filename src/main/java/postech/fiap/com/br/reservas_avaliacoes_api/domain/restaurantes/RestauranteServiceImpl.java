@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.CozinhaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 import java.util.List;
@@ -20,50 +21,48 @@ public class RestauranteServiceImpl implements RestauranteService {
     public RestauranteServiceImpl(RestauranteRepository restauranteRepository) {
         this.restauranteRepository = restauranteRepository;
     }
-
     @Override
     @Transactional
-    public RestauranteEntity criar(RestauranteEntity restauranteEntity) {
-        return  restauranteRepository.save(restauranteEntity);
+    public ResponseEntity<?> cadastrar(RestauranteEntity restauranteEntity) {
+        try {
+            if (restauranteRepository.existsBynomeAndEmail(restauranteEntity.getNome(),restauranteEntity.getEmail())) {
+                throw new ValidacaoException("Já existe o Nome do Restaurante com o email na base");
+            }
+            if (restauranteRepository.existsByEmail (restauranteEntity.getEmail()))
+            {
+                throw new ValidacaoException("Já existe o email " + restauranteEntity.getEmail() + " na base de restaurantes");
+            }
+            var restaturante=restauranteRepository.save(restauranteEntity);
+            return ResponseEntity.ok(new DadosDetalhamentoRestauranteDto(restaturante));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("Erro ao cadastrar restaurante: " + e.getMessage());
+        }
     }
-
-    @Override
-    public List<RestauranteEntity> obterTodos() {
-        return this.restauranteRepository.findAll();
-    }
-
-    public Page<RestauranteEntity> listaRestaurantes(Pageable pageable) {
-        Sort sort = Sort.by("nome").ascending();
-        Pageable paginacao =
-                PageRequest.of(pageable.getPageNumber(),
-                        pageable.getPageSize(), sort);
-        return this.restauranteRepository.findAll(paginacao);
-    }
-
-    @Override
-    public RestauranteEntity obterPorCodigo(Long codigo) {
-        return this.restauranteRepository
-                .findById(codigo)
-                .orElseThrow(()-> new IllegalArgumentException("Restaurante não existe!"));
-    }
-
     @Override
     @Transactional
-    public ResponseEntity<?> atualizarRestaurante(DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto) {
-
+    public ResponseEntity<?> atualizar(DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto) {
         try {
             if (!restauranteRepository.existsById(dadosAtualizacaoRestauranteDto.id_restaurante())) {
                 throw new ValidacaoException("Id do Restaurante informado não existe!");
             }
             var restaurante=restauranteRepository.getReferenceById (dadosAtualizacaoRestauranteDto.id_restaurante());
             restaurante.atualizarInformacoes(dadosAtualizacaoRestauranteDto);
-
             return ResponseEntity.ok(new DadosDetalhamentoRestauranteDto(restaurante));
         }catch (ValidacaoException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-
     }
-
-
+    @Override
+       public Page<RestauranteEntity> obterPaginados(Pageable pageable) {
+        Sort sort = Sort.by("nome").ascending();
+        Pageable paginacao =
+                PageRequest.of(pageable.getPageNumber(),
+                        pageable.getPageSize(), sort);
+        return this.restauranteRepository.findAll(paginacao);
+    }
+    @Override
+    public RestauranteEntity obterPorCodigo(Long codigo) {
+        return restauranteRepository.findById(codigo)
+                .orElseThrow(() -> new ValidacaoException("Id do Restaurante informado não existe!"));
+    }
 }

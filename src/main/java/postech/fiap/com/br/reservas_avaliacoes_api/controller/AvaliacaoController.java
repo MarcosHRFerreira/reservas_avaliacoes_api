@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoService;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.DadosAtualizacaoAvaliacaoDto;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas.ReservaEntity;
+import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 import java.util.List;
 
@@ -22,27 +24,27 @@ public class AvaliacaoController {
     public AvaliacaoController(AvaliacaoService avaliacaoService) {
         this.avaliacaoService = avaliacaoService;
     }
-    @PostMapping
+    @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity criar(@RequestBody AvaliacaoEntity avaliacaoEntity){
-        return this.avaliacaoService.criar(avaliacaoEntity);
+    public ResponseEntity cadastrar(@RequestBody AvaliacaoEntity avaliacaoEntity){
+        return this.avaliacaoService.cadastrar(avaliacaoEntity);
     }
-    @PutMapping("/atualiza-avaliacao")
-    public ResponseEntity atualizarAvaliacao(@Valid @RequestBody DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto) {
-        return this.avaliacaoService.atualizarAvaliacao(dadosAtualizacaoAvalizacaoDto);
+    @PutMapping("/atualizar")
+    public ResponseEntity atualizar(@Valid @RequestBody DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto) {
+        return this.avaliacaoService.atualizar(dadosAtualizacaoAvalizacaoDto);
+    }
+    @GetMapping("/paginar")
+    public ResponseEntity<Page<AvaliacaoEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
+        Page<AvaliacaoEntity> avaliacao = this.avaliacaoService.obterPaginados(pageable);
+        return ResponseEntity.ok(avaliacao);
     }
     @GetMapping("/{codigo}")
-    public AvaliacaoEntity obterPorCodigo(@PathVariable Long codigo){
-        return this.avaliacaoService.obterPorCodigo(codigo);
-    }
-    @GetMapping("/pagina-cozinha")
-    public ResponseEntity<Page<AvaliacaoEntity>> paginaAvaliacoes(@PageableDefault(size = 10) Pageable pageable){
-        Page<AvaliacaoEntity> avaliacoes = this.avaliacaoService.paginaAvaliacoes(pageable);
-        return ResponseEntity.ok(avaliacoes);
-    }
-
-    @GetMapping
-    public List<AvaliacaoEntity> obterTodos(){
-         return this.avaliacaoService.obterTodos();
+    public ResponseEntity<AvaliacaoEntity> obterPorCodigo(@PathVariable Long codigo) {
+        try {
+            AvaliacaoEntity avaliacao = this.avaliacaoService.obterPorCodigo(codigo);
+            return ResponseEntity.ok(avaliacao);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

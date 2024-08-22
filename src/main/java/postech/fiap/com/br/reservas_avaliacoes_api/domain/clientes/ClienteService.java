@@ -9,14 +9,12 @@ import java.util.List;
 
 public interface ClienteService {
 
-    public ClienteEntity criar(ClienteEntity clienteEntity);
+    public ResponseEntity<?> cadastrar(ClienteEntity clienteEntity);
 
-    public List<ClienteEntity> obterTodos();
-
-    public Page<ClienteEntity> listaClientes(@PageableDefault(size = 10) Pageable pageable);
+    public Page<ClienteEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
     public ClienteEntity obterPorCodigo(Long codigo);
 
-    public ResponseEntity atualizarCliente(DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto);
+    public ResponseEntity atualizar(DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto);
 
 }

@@ -7,5 +7,6 @@ public record DadosAtualizacaoReservaDto(
         Long id_cliente,
         Long id_restaurante,
         LocalDateTime data_hora,
-        Integer numero_pessoas) {
+        Integer numero_pessoas,
+        String numero_mesa) {
 }

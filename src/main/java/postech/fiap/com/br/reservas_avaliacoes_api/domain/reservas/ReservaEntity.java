@@ -25,6 +25,7 @@ public class ReservaEntity {
     private Long id_restaurante;
     private LocalDateTime data_hora;
     private Integer numero_pessoas;
+    private String numero_mesa;
 
     public void atualizarInformacoes(DadosAtualizacaoReservaDto dados) {
 
@@ -33,6 +34,9 @@ public class ReservaEntity {
         }
         if (dados.data_hora() != null) {
             this.data_hora = dados.data_hora();
+        }
+        if (dados.numero_mesa() != null) {
+            this.numero_mesa = dados.numero_mesa();
         }
     }
 }

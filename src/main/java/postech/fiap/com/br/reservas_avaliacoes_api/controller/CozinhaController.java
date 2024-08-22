@@ -8,9 +8,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.CozinhaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.CozinhaService;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.DadosAtualizacaoCozinhaDto;
+import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 import java.util.List;
 
@@ -24,26 +26,27 @@ public class CozinhaController {
         this.cozinhaService = cozinhaService;
     }
 
-    @PostMapping
+    @PostMapping("/cadastrar")
     @Transactional
-    public CozinhaEntity criar(@RequestBody CozinhaEntity cozinhaEntity){
-        return this.cozinhaService.criar(cozinhaEntity);
+    public ResponseEntity cadastrar(@RequestBody CozinhaEntity cozinhaEntity){
+        return this.cozinhaService.cadastrar(cozinhaEntity);
     }
-    @GetMapping
-    public List<CozinhaEntity> obterTodos(){
-        return this.cozinhaService.obterTodos();
+    @PutMapping("/atualizar")
+    public ResponseEntity atualizar(@Valid @RequestBody DadosAtualizacaoCozinhaDto dadosAtualizacaoCozinhaDto) {
+        return this.cozinhaService.atualizar(dadosAtualizacaoCozinhaDto);
     }
-    @GetMapping("/pagina-cozinha")
-    public ResponseEntity<Page<CozinhaEntity>> obterCozinhasPaginados(@PageableDefault(size = 10) Pageable pageable){
-        Page<CozinhaEntity> cozinhas = this.cozinhaService.listaCozinhas(pageable);
+    @GetMapping("/paginar")
+    public ResponseEntity<Page<CozinhaEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
+        Page<CozinhaEntity> cozinhas = this.cozinhaService.obterPaginados(pageable);
         return ResponseEntity.ok(cozinhas);
     }
     @GetMapping("/{codigo}")
-    public CozinhaEntity obterPorCodigo(@PathVariable Long codigo){
-        return this.cozinhaService.obterPorCodigo(codigo);
-    }
-    @PutMapping("/atualiza-cozinha")
-    public ResponseEntity atualizarCozinha(@Valid @RequestBody DadosAtualizacaoCozinhaDto dadosAtualizacaoCozinhaDto) {
-        return this.cozinhaService.atualizarCozinha(dadosAtualizacaoCozinhaDto);
+    public ResponseEntity<CozinhaEntity> obterPorCodigo(@PathVariable Long codigo) {
+        try {
+            CozinhaEntity cozinha = this.cozinhaService.obterPorCodigo(codigo);
+            return ResponseEntity.ok(cozinha);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

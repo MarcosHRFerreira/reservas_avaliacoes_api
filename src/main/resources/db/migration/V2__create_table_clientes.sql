@@ -1,7 +1,7 @@
 CREATE TABLE Clientes (
     ID_cliente SERIAL NOT NULL PRIMARY KEY,
     nome CHARACTER(100) NOT NULL,
-    email CHARACTER(100) NOT NULL unique,
+    email CHARACTER(100) NOT NULL,
     logradouro CHARACTER(200) NOT NULL,
     bairro CHARACTER(100) NOT NULL,
     cep CHARACTER(9) NOT NULL,

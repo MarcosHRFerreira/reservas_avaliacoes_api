@@ -5,20 +5,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas.ReservaEntity;
 
 import java.util.List;
 
 @Service
 public interface AvaliacaoService {
 
-    public ResponseEntity<?> criar(AvaliacaoEntity avaliacaoEntity);
+    public ResponseEntity<?> cadastrar(AvaliacaoEntity avaliacaoEntity);
 
-    public List<AvaliacaoEntity> obterTodos();
-
-    public Page<AvaliacaoEntity> paginaAvaliacoes(@PageableDefault(size = 10) Pageable pageable);
+    public Page<AvaliacaoEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
     public AvaliacaoEntity obterPorCodigo(Long codigo);
 
-    public ResponseEntity atualizarAvaliacao(DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto);
+    public ResponseEntity atualizar(DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto);
 
 }
