@@ -1,5 +1,7 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas;
 
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.Status_Mesa;
+
 import java.time.LocalDateTime;
 
 public record DadosAtualizacaoReservaDto(
@@ -8,5 +10,7 @@ public record DadosAtualizacaoReservaDto(
         Long id_restaurante,
         LocalDateTime data_hora,
         Integer numero_pessoas,
-        String numero_mesa) {
+        Integer numero_mesas,
+        Status_Reserva status)
+         {
 }

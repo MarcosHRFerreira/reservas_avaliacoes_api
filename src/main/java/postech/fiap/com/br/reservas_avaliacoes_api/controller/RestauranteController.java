@@ -27,7 +27,7 @@ public class RestauranteController {
     }
     @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity<?> cadastrar(@RequestBody RestauranteEntity restauranteEntity){
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody RestauranteEntity restauranteEntity){
         return this.restauranteService.cadastrar(restauranteEntity);
     }
     @PutMapping("/atualizar")

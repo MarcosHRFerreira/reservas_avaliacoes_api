@@ -8,7 +8,8 @@ public record DadosDetalhamentoReservaDto(
         Long id_restaurante,
         LocalDateTime data_hora,
         Integer numero_pessoas,
-        String numero_mesa) {
+        Integer numero_mesas,
+        Status_Reserva status) {
 
     public DadosDetalhamentoReservaDto(ReservaEntity reserva){
         this(reserva.getId_reserva(),
@@ -16,6 +17,8 @@ public record DadosDetalhamentoReservaDto(
                 reserva.getId_restaurante(),
                 reserva.getData_hora(),
                 reserva.getNumero_pessoas(),
-                reserva.getNumero_mesa());
+                reserva.getNumero_mesas(),
+                reserva.getStatus()
+               );
     }
 }

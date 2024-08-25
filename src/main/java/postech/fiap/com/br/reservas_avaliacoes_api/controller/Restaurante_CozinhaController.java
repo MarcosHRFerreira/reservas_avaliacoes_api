@@ -1,5 +1,7 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +25,10 @@ public class Restaurante_CozinhaController {
     public Restaurante_CozinhaController(Restaurante_CozinhaService restauranteCozinhaService) {
         restaurante_cozinhaService = restauranteCozinhaService;
     }
+
     @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity cadastar(@RequestBody Restaurante_CozinhaEntity restaurante_cozinhaEntity){
+    public ResponseEntity cadastar(@Valid @RequestBody   Restaurante_CozinhaEntity restaurante_cozinhaEntity ){
         return this.restaurante_cozinhaService.cadastrar(restaurante_cozinhaEntity);
     }
     @PutMapping("/atualizar")
@@ -46,4 +49,5 @@ public class Restaurante_CozinhaController {
             return ResponseEntity.notFound().build();
         }
     }
+
 }

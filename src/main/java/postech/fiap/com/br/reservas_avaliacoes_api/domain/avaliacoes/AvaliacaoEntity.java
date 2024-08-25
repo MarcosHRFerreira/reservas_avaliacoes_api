@@ -1,10 +1,12 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes.ClienteEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteEntity;
 
@@ -27,9 +29,6 @@ public class AvaliacaoEntity {
     private Long ID_avaliacao;
 
 
-    private Long ID_cliente;
-    private Long ID_restaurante;
-
 //    @ManyToOne
 //    @JoinColumn(name = "ID_cliente")
 //    private ClienteEntity clienteEntity;
@@ -45,20 +44,28 @@ public class AvaliacaoEntity {
 ////    private Long ID_restaurante;
 
 
+    @NotNull
+    @Min(value = 1, message = "ID_cliente deve ser maior ou igual a 1")
+    private Long ID_cliente;
+
+    @NotNull
+    @Min(value = 1, message = "ID_restaurante deve ser maior ou igual a 1")
+    private Long ID_restaurante;
+
+    @NotNull
+    @Min(value = 1, message = "Avaliacao deve ser no mínimo 1")
+    @Max(value = 10, message = "Avaliacao deve no máximo 10")
     private Long avaliacao;
 
+    @NotBlank(message = "O comentário é obrigatório")
+    @Size(min = 1, max=200, message = "O comentário deve ter no mínimo 1 caracteres e no maxímo 200")
     private String comentario;
 
+    @DateTimeFormat
     private LocalDateTime data_avaliacao;
 
     public void atualizarInformacoes(DadosAtualizacaoAvaliacaoDto dados) {
 
-//        if (dados.ID_cliente() != null) {
-//            this.ID_cliente = dados.ID_cliente();
-//        }
-//        if (dados.ID_restaurante() != null) {
-//            this.ID_restaurante = dados.ID_restaurante();
-//        }
         if (dados.avaliacao() != null) {
             this.avaliacao = dados.avaliacao();
         }

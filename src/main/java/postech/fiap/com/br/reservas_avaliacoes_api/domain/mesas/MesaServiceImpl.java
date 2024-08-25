@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteRepository;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes_cozinhas.DadosDetalhamentoRestauranteCozinha;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
@@ -23,6 +24,7 @@ public class MesaServiceImpl implements MesaService {
         this.restauranteRepository = restauranteRepository;
     }
     @Override
+    @Transactional
     public ResponseEntity cadastrar(MesaEntity mesaEntity) {
         try {
             if (!restauranteRepository.existsById(mesaEntity.getId_restaurante())) {
@@ -43,6 +45,7 @@ public class MesaServiceImpl implements MesaService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> atualizar(DadosAtualizacaoMesaDto dadosAtualizacaoMesaDto) {
         try {
             if (!restauranteRepository.existsById(dadosAtualizacaoMesaDto.id_mesa())) {
@@ -64,7 +67,7 @@ public class MesaServiceImpl implements MesaService {
     }
     @Override
     public Page<MesaEntity> obterPaginados(Pageable pageable) {
-        Sort sort = Sort.by("id_mesa").ascending();
+        Sort sort = Sort.by("numero").ascending();
         Pageable paginacao =
                 PageRequest.of(pageable.getPageNumber(),
                         pageable.getPageSize(), sort);

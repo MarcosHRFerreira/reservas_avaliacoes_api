@@ -28,7 +28,7 @@ public class ClienteController {
     }
     @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity<?> cadastrar(@RequestBody ClienteEntity clienteEntity){
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody ClienteEntity clienteEntity){
         return this.clienteService.cadastrar(clienteEntity);
     }
     @PutMapping("/atualizar")
