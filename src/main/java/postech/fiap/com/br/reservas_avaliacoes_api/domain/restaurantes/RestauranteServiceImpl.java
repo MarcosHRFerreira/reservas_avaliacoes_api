@@ -8,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.CozinhaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
-
-import java.util.List;
 
 @Service
 public class RestauranteServiceImpl implements RestauranteService {
@@ -23,7 +20,7 @@ public class RestauranteServiceImpl implements RestauranteService {
     }
     @Override
     @Transactional
-    public ResponseEntity<?> cadastrar(RestauranteEntity restauranteEntity) {
+    public ResponseEntity<Object> cadastrar(RestauranteEntity restauranteEntity) {
         try {
             if (restauranteRepository.existsBynomeAndEmail(restauranteEntity.getNome(),restauranteEntity.getEmail())) {
                 throw new ValidacaoException("Já existe o Nome do Restaurante com o email na base");
@@ -40,12 +37,12 @@ public class RestauranteServiceImpl implements RestauranteService {
     }
     @Override
     @Transactional
-    public ResponseEntity<?> atualizar(DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto) {
+    public ResponseEntity<Object> atualizar(DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto) {
         try {
-            if (!restauranteRepository.existsById(dadosAtualizacaoRestauranteDto.id_restaurante())) {
+            if (!restauranteRepository.existsById(dadosAtualizacaoRestauranteDto.idrestaurante())) {
                 throw new ValidacaoException("Id do Restaurante informado não existe!");
             }
-            var restaurante=restauranteRepository.getReferenceById (dadosAtualizacaoRestauranteDto.id_restaurante());
+            var restaurante=restauranteRepository.getReferenceById (dadosAtualizacaoRestauranteDto.idrestaurante());
             restaurante.atualizarInformacoes(dadosAtualizacaoRestauranteDto);
             return ResponseEntity.ok(new DadosDetalhamentoRestauranteDto(restaurante));
         }catch (ValidacaoException e){

@@ -9,8 +9,8 @@ import java.time.LocalDate;
 @Repository
 public interface AvaliacaoRepository extends JpaRepository<AvaliacaoEntity, Long> {
 
-    @Query("SELECT COUNT(av) > 0 FROM AvaliacaoEntity av WHERE av.ID_cliente= :id_cliente AND av.ID_restaurante = :id_restaurante AND date(av.data_avaliacao) = :data_avaliacao")
-    boolean findByid_clienteAndid_restauranteAnddata_avaliacao(Long id_cliente, Long id_restaurante, LocalDate data_avaliacao);
+    @Query("SELECT COUNT(av.idavaliacao) > 0 FROM AvaliacaoEntity av WHERE av.idcliente= :idcliente AND av.idrestaurante = :idrestaurante AND date(av.dataavaliacao) = :dataavaliacao")
+    boolean findByid_clienteAndid_restauranteAnddata_avaliacao(Long idcliente, Long idrestaurante, LocalDate dataavaliacao);
 
 
 }

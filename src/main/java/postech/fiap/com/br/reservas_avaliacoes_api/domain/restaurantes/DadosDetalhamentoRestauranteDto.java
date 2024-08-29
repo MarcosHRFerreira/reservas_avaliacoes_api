@@ -2,7 +2,7 @@ package postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes;
 
 public record DadosDetalhamentoRestauranteDto(
 
-        Long id_restaurante,
+        Long idrestaurante,
 
         String nome,
 
@@ -24,7 +24,7 @@ public record DadosDetalhamentoRestauranteDto(
 
     public DadosDetalhamentoRestauranteDto(RestauranteEntity restaurante){
 
-        this(restaurante.getId_restaurante(),
+        this(restaurante.getIdrestaurante(),
                 restaurante.getNome(),
                 restaurante.getEmail(),
                 restaurante.getLogradouro(),

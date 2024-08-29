@@ -1,14 +1,14 @@
 
-CREATE TABLE Avaliacoes (
-    ID_avaliacao SERIAL ,
-    ID_cliente INTEGER NOT NULL,
-    ID_restaurante INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS avaliacoes (
+    idavaliacao SERIAL ,
+    idcliente INTEGER NOT NULL,
+    idrestaurante INTEGER NOT NULL,
     avaliacao INTEGER NOT NULL,
     comentario CHARACTER(200) NOT NULL,
-    data_avaliacao TIMESTAMP NOT NULL ,
-    PRIMARY KEY (ID_cliente, ID_restaurante, data_avaliacao),
-    FOREIGN KEY (ID_cliente) REFERENCES Clientes(ID_cliente),
-    FOREIGN KEY (ID_restaurante) REFERENCES Restaurantes(ID_restaurante)
+    dataavaliacao TIMESTAMP NOT NULL ,
+    PRIMARY KEY (idcliente, idrestaurante, dataavaliacao),
+    FOREIGN KEY (idcliente) REFERENCES Clientes(idcliente),
+    FOREIGN KEY (idrestaurante) REFERENCES Restaurantes(idrestaurante)
 );
 
 

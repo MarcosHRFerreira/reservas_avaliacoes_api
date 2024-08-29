@@ -1,7 +1,7 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes;
 
 public record DadosAtualizacaoRestauranteDto(
-        Long id_restaurante,
+        Long idrestaurante,
 
         String nome,
 

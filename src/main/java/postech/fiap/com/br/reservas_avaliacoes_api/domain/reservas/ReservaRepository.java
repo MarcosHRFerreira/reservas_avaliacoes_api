@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Repository
 public interface ReservaRepository extends JpaRepository<ReservaEntity, Long> {
 
-    @Query("SELECT COUNT(rs) > 0 FROM ReservaEntity rs WHERE rs.id_cliente= :id_cliente AND rs.id_restaurante = :id_restaurante AND date(rs.data_hora) = :data_hora")
-   boolean findByid_clienteAndid_restauranteAnddata_reserva(Long id_cliente, Long id_restaurante, LocalDate data_hora);
+    @Query("SELECT COUNT(rs) > 0 FROM ReservaEntity rs WHERE rs.idcliente= :idcliente AND rs.idrestaurante = :idrestaurante AND date(rs.datahora) = :datahora")
+   boolean findByid_clienteAndid_restauranteAnddata_reserva(Long idcliente, Long idrestaurante, LocalDate datahora);
 
 }

@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoService;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.DadosAtualizacaoAvaliacaoDto;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas.ReservaEntity;
+import postech.fiap.com.br.reservas_avaliacoes_api.exception.ErroExclusaoException;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("avaliacoes")
@@ -26,12 +24,20 @@ public class AvaliacaoController {
     }
     @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody AvaliacaoEntity avaliacaoEntity){
-        return this.avaliacaoService.cadastrar(avaliacaoEntity);
+    public ResponseEntity<Object> cadastrar(@RequestBody AvaliacaoEntity avaliacaoEntity){
+        try {
+            return this.avaliacaoService.cadastrar(avaliacaoEntity);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@Valid @RequestBody DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto) {
-        return this.avaliacaoService.atualizar(dadosAtualizacaoAvalizacaoDto);
+    public ResponseEntity<Object> atualizar(@Valid @RequestBody DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto) {
+        try {
+            return this.avaliacaoService.atualizar(dadosAtualizacaoAvalizacaoDto);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
     @GetMapping("/paginar")
     public ResponseEntity<Page<AvaliacaoEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
@@ -47,4 +53,16 @@ public class AvaliacaoController {
             return ResponseEntity.notFound().build();
         }
     }
+    @DeleteMapping("/excluir/{codigo}")
+    public ResponseEntity<Void> excluirAvaliacao(@PathVariable Long codigo){
+        try {
+             this.avaliacaoService.excluirAvaliacao(codigo);
+            return ResponseEntity.noContent().build();
+        } catch (ErroExclusaoException e) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request (erro)
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build(); // 500 Internal Server Error (erro inesperado)
+        }
+    }
+
 }

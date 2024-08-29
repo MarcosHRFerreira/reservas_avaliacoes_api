@@ -1,10 +1,8 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes;
 
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteEntity;
-
 public record DadosDetalhamentoClienteDto(
 
-        Long id_cliente,
+        Long idcliente,
 
         String nome,
 
@@ -28,7 +26,7 @@ public record DadosDetalhamentoClienteDto(
 
     public DadosDetalhamentoClienteDto(ClienteEntity cliente){
 
-        this(cliente.getId_cliente(),
+        this(cliente.getIdcliente(),
                 cliente.getNome(),
                 cliente.getEmail(),
                 cliente.getTelefone(),

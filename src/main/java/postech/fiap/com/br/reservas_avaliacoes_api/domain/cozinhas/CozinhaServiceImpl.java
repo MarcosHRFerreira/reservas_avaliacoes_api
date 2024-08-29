@@ -1,6 +1,6 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas;
 
-import org.springframework.dao.DataIntegrityViolationException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -9,12 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes.ClienteEntity;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.DadosDetalhamentoRestauranteDto;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes_cozinhas.DadosDetalhamentoRestauranteCozinha;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
-
-import java.util.List;
 
 @Service
 public class CozinhaServiceImpl implements CozinhaService {
@@ -27,7 +22,7 @@ public class CozinhaServiceImpl implements CozinhaService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> cadastrar(CozinhaEntity cozinhaEntity) {
+    public ResponseEntity<Object> cadastrar(CozinhaEntity cozinhaEntity) {
         try {
             if (cozinhaRepository.existsByEspecialidade(cozinhaEntity.getEspecialidade())) {
                 throw new ValidacaoException("Especialidade já existe na base cozinha");
@@ -41,12 +36,12 @@ public class CozinhaServiceImpl implements CozinhaService {
     }
     @Override
     @Transactional
-    public ResponseEntity<?> atualizar(DadosAtualizacaoCozinhaDto dadosAtualizacaoCozinhaDto) {
+    public ResponseEntity<Object> atualizar(DadosAtualizacaoCozinhaDto dadosAtualizacaoCozinhaDto) {
         try {
-            if (!cozinhaRepository.existsById(dadosAtualizacaoCozinhaDto.id_cozinha())) {
+            if (!cozinhaRepository.existsById(dadosAtualizacaoCozinhaDto.idcozinha())) {
                 throw new ValidacaoException("Id da Cozinha informado não existe!");
             }
-            var cozinha=cozinhaRepository.getReferenceById (dadosAtualizacaoCozinhaDto.id_cozinha());
+            var cozinha=cozinhaRepository.getReferenceById (dadosAtualizacaoCozinhaDto.idcozinha());
             cozinha.atualizarInformacoes(dadosAtualizacaoCozinhaDto);
             return ResponseEntity.ok(new DadosDetalhamentoCozinhaDto (cozinha));
         }catch (ValidacaoException e){

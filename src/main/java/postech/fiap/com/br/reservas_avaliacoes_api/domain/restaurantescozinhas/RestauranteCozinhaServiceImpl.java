@@ -1,4 +1,4 @@
-package postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes_cozinhas;
+package postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantescozinhas;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -9,81 +9,78 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.CozinhaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.CozinhaRepository;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteRepository;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 @Service
-public class Restaurante_CozinhaServiceImpl implements Restaurante_CozinhaService {
+public class RestauranteCozinhaServiceImpl implements RestauranteCozinhaService {
 
-    private final Restaurante_CozinhaRepository restaurante_cozinhaRepository;
+    private final RestauranteCozinhaRepository restaurantecozinhaRepository;
     private final CozinhaRepository cozinhaRepository;
     private final RestauranteRepository restauranteRepository;
 
-    public Restaurante_CozinhaServiceImpl(Restaurante_CozinhaRepository restauranteCozinhaRepository, CozinhaRepository cozinhaRepository, RestauranteRepository restauranteRepository) {
-        restaurante_cozinhaRepository = restauranteCozinhaRepository;
+    public RestauranteCozinhaServiceImpl(RestauranteCozinhaRepository restauranteCozinhaRepository, CozinhaRepository cozinhaRepository, RestauranteRepository restauranteRepository) {
+        restaurantecozinhaRepository = restauranteCozinhaRepository;
         this.cozinhaRepository = cozinhaRepository;
         this.restauranteRepository = restauranteRepository;
     }
     @Override
     @Transactional
-    public ResponseEntity<?> cadastrar(Restaurante_CozinhaEntity restaurante_cozinhaEntity) {
+    public ResponseEntity<Object> cadastrar(RestauranteCozinhaEntity restaurantecozinhaEntity) {
         try {
-            if (!restauranteRepository.existsById(restaurante_cozinhaEntity.getId_restaurante())) {
+            if (!restauranteRepository.existsById(restaurantecozinhaEntity.getIdrestaurante())) {
                 throw new ValidacaoException("Id do Restaurante informado não existe!");
             }
-            if (!cozinhaRepository.existsById(restaurante_cozinhaEntity.getId_cozinha())) {
+            if (!cozinhaRepository.existsById(restaurantecozinhaEntity.getIdcozinha())) {
                 throw new ValidacaoException("Id da Cozinha informado não existe!");
             }
-            if (restaurante_cozinhaRepository.findByid_restauranteAndid_cozinha(
-                    restaurante_cozinhaEntity.getId_restaurante(),
-                    restaurante_cozinhaEntity.getId_cozinha())) {
+            if (restaurantecozinhaRepository.findByidrestauranteAndidcozinha(
+                    restaurantecozinhaEntity.getIdrestaurante(),
+                    restaurantecozinhaEntity.getIdcozinha())) {
                 return ResponseEntity.badRequest().body("Já existe um registro com este ID de restaurante e ID de cozinha.");
             }
-            restaurante_cozinhaRepository.save(restaurante_cozinhaEntity);
-            return ResponseEntity.ok(new DadosDetalhamentoRestauranteCozinha(restaurante_cozinhaEntity));
+            restaurantecozinhaRepository.save(restaurantecozinhaEntity);
+            return ResponseEntity.ok(new DadosDetalhamentoRestauranteCozinha(restaurantecozinhaEntity));
 
         } catch (ValidacaoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (DataIntegrityViolationException e) {
-           // log.error("Erro ao inserir registro: {}", e.getMessage());
             throw new ValidacaoException("Erro ao inserir registro: Violação de unicidade.");
         }
     }
     @Override
     @Transactional
-    public ResponseEntity<?> atualizar(DadosAtualizacaoRestauranteCozinhaDto dadosAtualizacaoRestauranteCozinhaDto) {
+    public ResponseEntity<Object> atualizar(DadosAtualizacaoRestauranteCozinhaDto dadosAtualizacaoRestauranteCozinhaDto) {
         try {
-            if (!restaurante_cozinhaRepository.existsById(dadosAtualizacaoRestauranteCozinhaDto.id_restaurante_cozinha())) {
+            if (!restaurantecozinhaRepository.existsById(dadosAtualizacaoRestauranteCozinhaDto.idrestaurante_cozinha())) {
                 throw new ValidacaoException("Id do Restaurante_Cozinha informado não existe!");
             }
-            if (!restauranteRepository.existsById(dadosAtualizacaoRestauranteCozinhaDto.id_restaurante())) {
+            if (!restauranteRepository.existsById(dadosAtualizacaoRestauranteCozinhaDto.idrestaurante())) {
                 throw new ValidacaoException("Id do Restaurante informado não existe!");
             }
-            if (!cozinhaRepository.existsById(dadosAtualizacaoRestauranteCozinhaDto.id_cozinha())) {
+            if (!cozinhaRepository.existsById(dadosAtualizacaoRestauranteCozinhaDto.idcozinha())) {
                 throw new ValidacaoException("Id da Cozinha informado não existe!");
             }
-            var restaurante_cozinha = restaurante_cozinhaRepository.getReferenceById(dadosAtualizacaoRestauranteCozinhaDto.id_restaurante_cozinha());
-            restaurante_cozinha.atualizarInformacoes(dadosAtualizacaoRestauranteCozinhaDto);
-            return ResponseEntity.ok(new DadosDetalhamentoRestauranteCozinha(restaurante_cozinha));
+            var restaurantecozinha = restaurantecozinhaRepository.getReferenceById(dadosAtualizacaoRestauranteCozinhaDto.idrestaurante_cozinha());
+            restaurantecozinha.atualizarInformacoes(dadosAtualizacaoRestauranteCozinhaDto);
+            return ResponseEntity.ok(new DadosDetalhamentoRestauranteCozinha(restaurantecozinha));
         } catch (ValidacaoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
     @Override
-    public Restaurante_CozinhaEntity obterPorCodigo(Long codigo) {
-        return restaurante_cozinhaRepository.findById(codigo)
+    public RestauranteCozinhaEntity obterPorCodigo(Long codigo) {
+        return restaurantecozinhaRepository.findById(codigo)
                 .orElseThrow(() -> new ValidacaoException("Id do Restaurante_Cozinha informado não existe!"));
     }
     @Override
-    public Page<Restaurante_CozinhaEntity> obterPaginados(Pageable pageable) {
+    public Page<RestauranteCozinhaEntity> obterPaginados(Pageable pageable) {
         Sort sort = Sort.by("id_restaurante_cozinha").ascending();
         Pageable paginacao =
                 PageRequest.of(pageable.getPageNumber(),
                         pageable.getPageSize(), sort);
-        return this.restaurante_cozinhaRepository.findAll(paginacao);
+        return this.restaurantecozinhaRepository.findAll(paginacao);
     }
 
 }

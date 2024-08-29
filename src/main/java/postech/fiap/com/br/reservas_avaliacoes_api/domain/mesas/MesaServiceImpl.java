@@ -1,6 +1,5 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteRepository;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes_cozinhas.DadosDetalhamentoRestauranteCozinha;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 @Service
@@ -25,39 +23,37 @@ public class MesaServiceImpl implements MesaService {
     }
     @Override
     @Transactional
-    public ResponseEntity cadastrar(MesaEntity mesaEntity) {
+    public ResponseEntity<Object> cadastrar(MesaEntity mesaEntity) {
         try {
-            if (!restauranteRepository.existsById(mesaEntity.getId_restaurante())) {
+            if (!restauranteRepository.existsById(mesaEntity.getIdrestaurante())) {
                 throw new ValidacaoException("Id do Restaurante informado não existe!");
             }
             if (mesaRepository.findByid_restauranteAndnumero(
-                    mesaEntity.getId_restaurante(),
+                    mesaEntity.getIdrestaurante(),
                     mesaEntity.getNumero())) {
                 return ResponseEntity.badRequest().body("Já existe um registro com este ID de restaurante número de mesa.");
             }else {
                 mesaRepository.save(mesaEntity);
                 return ResponseEntity.ok(new DadosDetalhamentoMesaDto(mesaEntity));
             }
-
         } catch (ValidacaoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
     @Override
     @Transactional
-    public ResponseEntity<?> atualizar(DadosAtualizacaoMesaDto dadosAtualizacaoMesaDto) {
+    public ResponseEntity<Object> atualizar(DadosAtualizacaoMesaDto dadosAtualizacaoMesaDto) {
         try {
-            if (!restauranteRepository.existsById(dadosAtualizacaoMesaDto.id_mesa())) {
+            if (!restauranteRepository.existsById(dadosAtualizacaoMesaDto.idmesa())) {
                 throw new ValidacaoException("Id da Mesa informado não existe!");
             }
             if (!mesaRepository.findByid_restauranteAndnumero(
-                    dadosAtualizacaoMesaDto.id_restaurante(),
+                    dadosAtualizacaoMesaDto.idrestaurante(),
                     dadosAtualizacaoMesaDto.numero())) {
 
                 return ResponseEntity.badRequest().body("Não existe um registro com ID de restaurante e número de mesa.");
             }
-            var mesa = mesaRepository.getReferenceById(dadosAtualizacaoMesaDto.id_mesa());
+            var mesa = mesaRepository.getReferenceById(dadosAtualizacaoMesaDto.idmesa());
             mesa.atualizarInformacoes(dadosAtualizacaoMesaDto);
             return ResponseEntity.ok(new DadosDetalhamentoMesaDto(mesa));
 
@@ -73,7 +69,6 @@ public class MesaServiceImpl implements MesaService {
                         pageable.getPageSize(), sort);
         return this.mesaRepository.findAll(paginacao);
     }
-
     @Override
     public MesaEntity obterPorCodigo(Long codigo) {
         return mesaRepository.findById(codigo)

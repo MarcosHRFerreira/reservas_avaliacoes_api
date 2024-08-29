@@ -8,12 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.DadosAtualizacaoMesaDto;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.DadosDetalhamentoMesaDto;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.MesaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.MesaService;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas.DadosAtualizacaoReservaDto;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas.ReservaEntity;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas.ReservaService;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 @RestController
@@ -28,11 +24,11 @@ public class MesaController {
 
     @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody MesaEntity mesaEntity){
+    public ResponseEntity<Object> cadastrar(@RequestBody MesaEntity mesaEntity){
         return this.mesaService.cadastrar(mesaEntity);
     }
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@Valid @RequestBody DadosAtualizacaoMesaDto dadosAtualizacaoMesaDto) {
+    public ResponseEntity<Object> atualizar(@Valid @RequestBody DadosAtualizacaoMesaDto dadosAtualizacaoMesaDto) {
         return this.mesaService.atualizar(dadosAtualizacaoMesaDto);
     }
     @GetMapping("/paginar")

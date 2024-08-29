@@ -1,7 +1,7 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes;
 
 public record DadosAtualizacaoClienteDto(
-        Long id_cliente,
+        Long idcliente,
 
         String nome,
 

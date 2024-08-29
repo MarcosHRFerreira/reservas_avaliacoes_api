@@ -8,11 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoEntity;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.DadosDetalhamentoRestauranteDto;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
-
-import java.util.List;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -24,7 +20,7 @@ public class ClienteServiceImpl implements ClienteService {
     }
     @Override
     @Transactional
-    public  ResponseEntity<?> cadastrar(ClienteEntity clienteEntity) {
+    public  ResponseEntity<Object> cadastrar(ClienteEntity clienteEntity) {
         try {
             if (clienteRepository.existsBynomeAndEmail(clienteEntity.getNome(), clienteEntity.getEmail())) {
                 throw new ValidacaoException("Já existe o Nome e o email na base");
@@ -41,12 +37,12 @@ public class ClienteServiceImpl implements ClienteService {
     }
     @Override
     @Transactional
-    public ResponseEntity atualizar(DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto) {
+    public ResponseEntity<Object> atualizar(DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto) {
         try {
-            if (!clienteRepository.existsById(dadosAtualizacaoClienteDto.id_cliente())) {
+            if (!clienteRepository.existsById(dadosAtualizacaoClienteDto.idcliente())) {
                 throw new ValidacaoException("Id do Cliente informado não existe!");
             }
-            var cliente=clienteRepository.getReferenceById (dadosAtualizacaoClienteDto.id_cliente());
+            var cliente=clienteRepository.getReferenceById (dadosAtualizacaoClienteDto.idcliente());
             cliente.atualizarInformacoes(dadosAtualizacaoClienteDto);
             return ResponseEntity.ok(new DadosDetalhamentoClienteDto(cliente));
         }catch (ValidacaoException e){
@@ -64,7 +60,7 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public ClienteEntity obterPorCodigo(Long codigo) {
         return clienteRepository.findById(codigo)
-                .orElseThrow(() -> new ValidacaoException("Id da Cliente informado não existe!"));
+                .orElseThrow(() -> new ValidacaoException("Id do Cliente informado não existe!"));
     }
 
 }

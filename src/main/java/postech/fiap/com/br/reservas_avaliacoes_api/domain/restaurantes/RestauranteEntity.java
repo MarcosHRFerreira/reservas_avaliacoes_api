@@ -6,24 +6,22 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.Objects;
 
 @Table(name = "restaurantes")
 @Entity(name = "RestauranteEntity")
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
-@EqualsAndHashCode(of = "id")
 
 public class RestauranteEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private Long id_restaurante;
+    private Long idrestaurante;
 
     @NotBlank(message = "O nome do restaurante é obrigatório")
     @Size(min = 3,max=100, message = "O nome do restaurante deve ter no mínimo 3 caracteres e no maxímo 100")
@@ -63,6 +61,128 @@ public class RestauranteEntity {
     private String cidade;
 
 
+    public Long getIdrestaurante() {
+        return idrestaurante;
+    }
+
+    public void setIdrestaurante(Long idrestaurante) {
+        this.idrestaurante = idrestaurante;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getLogradouro() {
+        return logradouro;
+    }
+
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
+    @Override
+    public String toString() {
+        return "RestauranteEntity{" +
+                "idrestaurante=" + idrestaurante +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                ", telefone='" + telefone + '\'' +
+                ", logradouro='" + logradouro + '\'' +
+                ", bairro='" + bairro + '\'' +
+                ", cep='" + cep + '\'' +
+                ", complemento='" + complemento + '\'' +
+                ", numero='" + numero + '\'' +
+                ", uf='" + uf + '\'' +
+                ", cidade='" + cidade + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RestauranteEntity that = (RestauranteEntity) o;
+        return Objects.equals(idrestaurante, that.idrestaurante);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(idrestaurante);
+    }
+
+    public RestauranteEntity() {
+        //
+    }
+
     public void atualizarInformacoes(DadosAtualizacaoRestauranteDto dados){
 
         if(dados.nome() != null ){
@@ -95,9 +215,7 @@ public class RestauranteEntity {
         if(dados.cidade() != null){
             this.cidade=dados.cidade().toUpperCase();
         }
-
     }
-
 }
 
 

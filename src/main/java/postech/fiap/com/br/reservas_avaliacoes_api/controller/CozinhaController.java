@@ -8,13 +8,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.CozinhaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.CozinhaService;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas.DadosAtualizacaoCozinhaDto;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("cozinhas")
@@ -28,12 +25,22 @@ public class CozinhaController {
 
     @PostMapping("/cadastrar")
     @Transactional
-    public ResponseEntity cadastrar(@RequestBody CozinhaEntity cozinhaEntity){
-        return this.cozinhaService.cadastrar(cozinhaEntity);
+    public ResponseEntity<Object> cadastrar(@RequestBody CozinhaEntity cozinhaEntity){
+
+        try {
+            return this.cozinhaService.cadastrar(cozinhaEntity);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
     @PutMapping("/atualizar")
-    public ResponseEntity atualizar(@Valid @RequestBody DadosAtualizacaoCozinhaDto dadosAtualizacaoCozinhaDto) {
-        return this.cozinhaService.atualizar(dadosAtualizacaoCozinhaDto);
+    public ResponseEntity<Object>  atualizar(@Valid @RequestBody DadosAtualizacaoCozinhaDto dadosAtualizacaoCozinhaDto) {
+
+        try {
+            return this.cozinhaService.atualizar(dadosAtualizacaoCozinhaDto);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
     @GetMapping("/paginar")
     public ResponseEntity<Page<CozinhaEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
