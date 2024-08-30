@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.AvaliacaoService;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.DadosAtualizacaoAvaliacaoDto;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.EstatisticaRestauranteDto;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ErroExclusaoException;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("avaliacoes")
@@ -62,6 +65,28 @@ public class AvaliacaoController {
             return ResponseEntity.badRequest().build(); // 400 Bad Request (erro)
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build(); // 500 Internal Server Error (erro inesperado)
+        }
+    }
+
+    @GetMapping("/estatisticas/{idRestaurante}")
+    public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30Dias(@PathVariable Long idRestaurante) {
+        try {
+            return avaliacaoService.getEstatisticasRestauranteUltimos30Dias(idRestaurante);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/estatisticas/todos")
+    public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30DiasTodos() {
+        try {
+            return avaliacaoService.getEstatisticasRestauranteUltimos30DiasTodos();
+        } catch (ValidacaoException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 

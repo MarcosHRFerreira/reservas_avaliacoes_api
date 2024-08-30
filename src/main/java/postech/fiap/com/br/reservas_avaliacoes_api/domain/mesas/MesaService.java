@@ -18,4 +18,6 @@ public interface MesaService {
 
     public MesaEntity obterPorCodigo(Long codigo);
 
+    public ResponseEntity<Void> excluirMesa(Long codigo);
+
 }

@@ -12,6 +12,11 @@ import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.Restauran
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ErroExclusaoException;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AvaliacaoServiceImpl implements AvaliacaoService {
 
@@ -77,7 +82,6 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
           }
     }
 
-
     @Override
     public Page<AvaliacaoEntity> obterPaginados(Pageable pageable) {
         Pageable paginacao =
@@ -91,7 +95,34 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
                 .orElseThrow(() -> new ValidacaoException("Id da Avaliação informado não existe!"));
     }
 
+    public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30Dias(Long idRestaurante) {
+        List<Object[]> resultados = idRestaurante != null ?
+                avaliacaoRepository.getEstatisticasRestauranteUltimos30Dias(idRestaurante) :
+                avaliacaoRepository.getEstatisticasRestauranteUltimos30DiasTodos();
+        return processarResultados(resultados);
+    }
 
+    public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30DiasTodos() {
+        return getEstatisticasRestauranteUltimos30Dias(null);
+    }
 
+    private ResponseEntity<List<EstatisticaRestauranteDto>> processarResultados(List<Object[]> resultados) {
+        if (resultados.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        List<EstatisticaRestauranteDto> estatisticas = new ArrayList<>();
+
+        for (Object[] resultado : resultados) {
+            String nome = (String) resultado[0];
+            Long totalAvaliacoes = (Long) resultado[1];
+
+            BigDecimal mediaAvaliacaoBigDecimal = (BigDecimal) resultado[2];
+            mediaAvaliacaoBigDecimal = mediaAvaliacaoBigDecimal.setScale(2, RoundingMode.HALF_UP);
+            Double mediaAvaliacao = mediaAvaliacaoBigDecimal.doubleValue();
+            EstatisticaRestauranteDto estatistica = new EstatisticaRestauranteDto(nome, totalAvaliacoes, mediaAvaliacao);
+            estatisticas.add(estatistica);
+        }
+        return ResponseEntity.ok(estatisticas);
+    }
 }
 

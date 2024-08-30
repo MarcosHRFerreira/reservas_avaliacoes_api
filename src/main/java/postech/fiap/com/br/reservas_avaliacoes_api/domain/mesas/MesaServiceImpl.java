@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteRepository;
+import postech.fiap.com.br.reservas_avaliacoes_api.exception.ErroExclusaoException;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 @Service
@@ -74,4 +75,15 @@ public class MesaServiceImpl implements MesaService {
         return mesaRepository.findById(codigo)
                 .orElseThrow(() -> new ValidacaoException("Id do Mesa informado não existe!"));
     }
+
+    @Override
+    public ResponseEntity<Void> excluirMesa(Long codigo) {
+        try {
+            mesaRepository.deleteById(codigo);
+            return ResponseEntity.noContent().build();
+        }catch (ErroExclusaoException e){
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

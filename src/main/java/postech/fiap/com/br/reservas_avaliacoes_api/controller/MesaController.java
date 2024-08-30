@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.DadosAtualizacaoMesaDto;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.MesaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.MesaService;
+import postech.fiap.com.br.reservas_avaliacoes_api.exception.ErroExclusaoException;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 @RestController
@@ -45,5 +46,17 @@ public class MesaController {
             return ResponseEntity.notFound().build();
         }
     }
+     @DeleteMapping("/excluir/{codigo}")
+    public ResponseEntity<Void> excluirMesa(@PathVariable Long codigo){
+        try {
+            this.mesaService.excluirMesa(codigo);
+            return ResponseEntity.noContent().build();
+        } catch (ErroExclusaoException e) {
+            return ResponseEntity.badRequest().build(); // 400 Bad Request (erro)
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build(); // 500 Internal Server Error (erro inesperado)
+        }
+    }
+
 
 }

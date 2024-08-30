@@ -6,6 +6,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public interface AvaliacaoService {
@@ -19,5 +21,10 @@ public interface AvaliacaoService {
     public ResponseEntity<Object> atualizar(DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto);
 
     public ResponseEntity<Void> excluirAvaliacao(Long codigo);
+
+    public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30Dias(Long idRestaurante);
+
+    public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30DiasTodos();
+
 
 }
