@@ -36,6 +36,14 @@ public class ReservaServiceImpl implements ReservaService {
     @Transactional
     public ResponseEntity cadastrar(ReservaEntity reservaEntity) {
         try {
+
+            if (reservaEntity.getIdcliente() == null || reservaEntity.getIdrestaurante() == null ||
+                    reservaEntity.getDatahora() == null || reservaEntity.getNumeropessoas() == null ||
+                    reservaEntity.getNumeromesas() == null || reservaEntity.getStatus() == null) {
+
+                throw new ValidacaoException("Os campos esperados são: idcliente, idrestaurante, datahora, numeropessoas, numeromesas, status");
+            }
+
             if (!clienteRepository.existsById(reservaEntity.getIdcliente())) {
                 throw new ValidacaoException("Id do Cliente informado não existe!");
             }

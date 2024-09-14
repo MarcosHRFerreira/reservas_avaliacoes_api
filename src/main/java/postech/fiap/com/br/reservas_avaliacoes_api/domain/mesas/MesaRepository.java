@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface MesaRepository extends JpaRepository<MesaEntity,Long> {
 
-    @Query("SELECT COUNT(m) > 0 FROM MesaEntity m WHERE m.idrestaurante = :idrestaurante AND m.numero = :numero")
-    boolean findByid_restauranteAndnumero(Long idrestaurante, String numero);
+    @Query("SELECT COUNT(m) > 0 FROM MesaEntity m WHERE m.idrestaurante = :idrestaurante AND m.idmesa = :idmesa")
+    boolean findByidrestauranteAndidmesa(Long idrestaurante, Long idmesa);
 
     @Query("SELECT m FROM MesaEntity m WHERE m.idrestaurante = :idRestaurante AND m.status = :status" )
     List<MesaEntity> findByStatusIsAndId_restaurante(Long idRestaurante, Status_Mesa status  );

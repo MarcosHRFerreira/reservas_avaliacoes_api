@@ -9,12 +9,14 @@ import lombok.*;
 
 import java.util.Objects;
 
-@Getter
-@Setter
-@AllArgsConstructor
+//@Getter
+//@Setter
+
 
 @Table(name="mesas")
 @Entity(name = "MesaEntity")
+@NoArgsConstructor
+@AllArgsConstructor
 
 public class MesaEntity {
 
@@ -26,16 +28,21 @@ public class MesaEntity {
     @Min(value = 1, message = "idrestaurante deve ser maior ou igual a 1")
     private Long idrestaurante;
 
+    @NotNull
     @NotBlank(message = "O número da mesa é obrigatório")
     @Size(min = 1, max=3, message = "O número da mesa deve ter no mínimo 1 caracteres e no maxímo 3")
     private String numero;
 
     @Enumerated(EnumType.STRING)
-    private Status_Mesa status ;
+    private Status_Mesa status = Status_Mesa.DISPONIVEL;
 
-    public MesaEntity() {
-        //
-    }
+//    public MesaEntity(Long idrestaurante, String numero, Status_Mesa status) {
+//        this.idrestaurante = idrestaurante;
+//        this.numero = numero;
+//        this.status = status;
+//    }
+
+
     public Long getIdmesa() {
         return idmesa;
     }
@@ -93,4 +100,6 @@ public class MesaEntity {
         }
 
     }
+
+
 }

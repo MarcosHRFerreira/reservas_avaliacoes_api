@@ -18,7 +18,11 @@ public record RestauranteDto(
 
          String uf,
 
-         String cidade
+         String cidade,
+
+         String funcionamento,
+
+         String capacidade
 
 ) {
 }

@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class RestauranteCozinhaController {
         restaurantecozinhaService = restauranteCozinhaService;
     }
 
-    @PostMapping("/cadastrar")
+    @PostMapping(value = "/cadastrar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Object> cadastar(@Valid @RequestBody RestauranteCozinhaEntity restaurantecozinhaEntity ){
         try {
@@ -32,7 +33,7 @@ public class RestauranteCozinhaController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PutMapping("/atualizar")
+    @PutMapping(value = "/atualizar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> atualizar(@Valid @RequestBody DadosAtualizacaoRestauranteCozinhaDto dadosAtualizacaoRestauranteCozinhaDto) {
         try {
             return this.restaurantecozinhaService.atualizar(dadosAtualizacaoRestauranteCozinhaDto);

@@ -4,10 +4,13 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +73,17 @@ public class CustomExceptionHandler {
             HttpRequestMethodNotSupportedException ex) {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
                 .body("Método HTTP não suportado.");
+    }
+
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    @ResponseBody
+    public ResponseEntity<Object> handleHttpMediaTypeNotSupportedException(
+            HttpMediaTypeNotSupportedException ex) {
+
+        String bodyOfResponse = "Formato de dados inválido. Por favor, envie dados no formato JSON.";
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
 }

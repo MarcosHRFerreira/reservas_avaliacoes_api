@@ -28,6 +28,7 @@ public class ReservaEntity {
     private Long idrestaurante;
 
   //  @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$", message = "A data e hora devem estar no formato yyyy-MM-ddTHH:mm:ss")
+  @NotNull
     private LocalDateTime datahora;
 
     @NotNull
@@ -134,4 +135,8 @@ public class ReservaEntity {
             this.status =dados.status();
         }
     }
+
+
+
+
 }

@@ -10,8 +10,7 @@ import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+
 
 @Table(name = "avaliacoes")
 @Entity(name = "AvaliacaoEntity")

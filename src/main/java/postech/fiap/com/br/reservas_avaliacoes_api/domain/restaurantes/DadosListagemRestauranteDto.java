@@ -8,6 +8,8 @@ public record DadosListagemRestauranteDto(
 
         String email,
 
+        String telefone,
+
         String logradouro,
 
         String bairro,
@@ -20,7 +22,11 @@ public record DadosListagemRestauranteDto(
 
         String uf,
 
-        String cidade
+        String cidade,
+
+        String funcionamento,
+
+        String capacidade
 
 
 ) {

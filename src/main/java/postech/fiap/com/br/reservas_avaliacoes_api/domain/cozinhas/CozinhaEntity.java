@@ -2,6 +2,7 @@ package postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -21,6 +22,7 @@ public class CozinhaEntity {
 
     private Long idcozinha;
 
+    @NotNull
     @NotBlank(message = "A especialidade é obrigatória")
     @Size(min = 1, max=200, message = "O nome do bairro deve ter no mínimo 3 caracteres e no maxímo 200")
     private String especialidade;
