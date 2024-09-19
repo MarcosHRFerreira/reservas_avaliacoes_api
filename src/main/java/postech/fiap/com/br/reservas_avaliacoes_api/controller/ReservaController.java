@@ -45,10 +45,9 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
     @GetMapping("/{codigo}")
-    public ResponseEntity<ReservaEntity> obterPorCodigo(@PathVariable Long codigo) {
+    public ResponseEntity obterPorCodigo(@PathVariable Long codigo) {
         try {
-            ReservaEntity reserva = this.reservaService.obterPorCodigo(codigo);
-            return ResponseEntity.ok(reserva);
+            return this.reservaService.obterPorCodigo(codigo);
         } catch (ValidacaoException e) {
             return ResponseEntity.notFound().build();
         }

@@ -15,6 +15,6 @@ public interface ReservaService {
 
     public Page<ReservaEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
-    public ReservaEntity obterPorCodigo(Long codigo);
+    public ResponseEntity<Object> obterPorCodigo(Long codigo);
 
 }

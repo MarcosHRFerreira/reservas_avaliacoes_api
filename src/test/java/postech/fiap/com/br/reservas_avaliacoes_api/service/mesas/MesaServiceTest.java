@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.*;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteRepository;
-
-
 import java.util.Arrays;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,13 +22,10 @@ import static org.mockito.Mockito.*;
 
 class MesaServiceTest {
 
-
     @Mock
     private MesaRepository mesaRepository;
-
     @Mock
     private MesaServiceImpl mesaService;
-
     @Mock
     private RestauranteRepository restauranteRepository;
 
@@ -42,7 +37,6 @@ class MesaServiceTest {
         openMocks = MockitoAnnotations.openMocks(this);
         mesaService = new MesaServiceImpl(mesaRepository, restauranteRepository);
     }
-
     @AfterEach
     void tearDown() throws Exception {
         openMocks.close();
@@ -92,7 +86,6 @@ class MesaServiceTest {
 
     @Nested
     class AlterarMesa {
-
         @Test
         void deveAtualizarMesaComSucesso() {
             // Arrange
@@ -112,8 +105,6 @@ class MesaServiceTest {
             assertTrue(response.getBody() instanceof DadosDetalhamentoMesaDto);
 
             verify(mesaServico,times(1)).atualizar(any(dadosAtualizacaoMesaDto.getClass()));
-
-
         }
 
         @Test
@@ -124,25 +115,20 @@ class MesaServiceTest {
             DadosAtualizacaoMesaDto dadosAtualizacaoMesaDto = new DadosAtualizacaoMesaDto(10L, 1L, "1", Status_Mesa.DISPONIVEL);
 
             when(mesaRepositorio.existsById(dadosAtualizacaoMesaDto.idmesa())).thenReturn(false);
-
             doReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id da Mesa informado não existe!")).when(mesaServico).atualizar(any(DadosAtualizacaoMesaDto.class));
-
             // Act
             ResponseEntity<Object> response = mesaServico.atualizar(dadosAtualizacaoMesaDto);
             // Assert
-
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
             assertThat(response.getBody()).isEqualTo("Id da Mesa informado não existe!");
             verify(mesaServico,times(1)).atualizar(any(dadosAtualizacaoMesaDto.getClass()));
 
         }
-
         @Test
         void deveRetornarBadRequestQuandoRestauranteOuMesaInvalido() {
 
             MesaRepository mesaRepositorio = Mockito.mock(MesaRepository.class);
             MesaServiceImpl mesaServico = Mockito.mock(MesaServiceImpl.class);
-
             // Arrange
             DadosAtualizacaoMesaDto dadosAtualizacaoMesaDto = new DadosAtualizacaoMesaDto(15L, 15L, "7", Status_Mesa.DISPONIVEL);
             Mockito.when(mesaRepositorio.findByidrestauranteAndidmesa(
@@ -151,18 +137,14 @@ class MesaServiceTest {
             )).thenReturn(false); // Simula que não existe um registro com o ID do restaurante e número da mesa
 
             doReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não existe um registro com ID de restaurante e número de mesa.")).when(mesaServico).atualizar(any(DadosAtualizacaoMesaDto.class));
-
             // Act
             ResponseEntity<Object> response = mesaServico.atualizar(dadosAtualizacaoMesaDto);
-
             // Assert
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
             assertThat(response.getBody()).isEqualTo("Não existe um registro com ID de restaurante e número de mesa.");
             verify(mesaServico,times(1)).atualizar(any(dadosAtualizacaoMesaDto.getClass()));
         }
-
     }
-
     @Nested
     class ExcluirMesa {
 

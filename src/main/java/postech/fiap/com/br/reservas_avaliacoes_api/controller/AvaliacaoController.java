@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,16 +28,17 @@ public class AvaliacaoController {
         this.avaliacaoService = avaliacaoService;
     }
 
-    @PostMapping(value = "/cadastrar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cadastrar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<Object> cadastrar(@RequestBody AvaliacaoEntity avaliacaoEntity){
+    public ResponseEntity<Object> cadastrar(@RequestBody AvaliacaoEntity avaliacaoEntity) {
         try {
             return this.avaliacaoService.cadastrar(avaliacaoEntity);
         } catch (ValidacaoException e) {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PutMapping(value = "/atualizar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @PutMapping(value = "/atualizar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> atualizar(@Valid @RequestBody DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto) {
         try {
             return this.avaliacaoService.atualizar(dadosAtualizacaoAvalizacaoDto);
@@ -44,27 +46,31 @@ public class AvaliacaoController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @GetMapping("/paginar")
-    public ResponseEntity<Page<AvaliacaoEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
+    public ResponseEntity<Page<AvaliacaoEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable) {
+
         Page<AvaliacaoEntity> avaliacao = this.avaliacaoService.obterPaginados(pageable);
         return ResponseEntity.ok(avaliacao);
     }
+
     @GetMapping("/{codigo}")
-    public ResponseEntity<AvaliacaoEntity> obterPorCodigo(@PathVariable Long codigo) {
+    public ResponseEntity obterPorCodigo(@PathVariable Long codigo) {
         try {
-            AvaliacaoEntity avaliacao = this.avaliacaoService.obterPorCodigo(codigo);
-            return ResponseEntity.ok(avaliacao);
+            return this.avaliacaoService.obterPorCodigo(codigo);
         } catch (ValidacaoException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
     @DeleteMapping("/excluir/{codigo}")
-    public ResponseEntity<Void> excluirAvaliacao(@PathVariable Long codigo){
+    public ResponseEntity<Object> excluirAvaliacao(@PathVariable Long codigo) {
         try {
-             this.avaliacaoService.excluirAvaliacao(codigo);
-            return ResponseEntity.noContent().build();
+            return this.avaliacaoService.excluirAvaliacao(codigo);
         } catch (ErroExclusaoException e) {
-            return ResponseEntity.badRequest().build(); // 400 Bad Request (erro)
+            return ResponseEntity.badRequest().build();
+        } catch (ValidacaoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build(); // 500 Internal Server Error (erro inesperado)
         }

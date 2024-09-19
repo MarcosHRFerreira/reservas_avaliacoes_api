@@ -1,6 +1,7 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.cozinhas;
 
 
+import jakarta.validation.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes.DadosDetalhamentoAvalizacaoDto;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 @Service
@@ -49,15 +51,33 @@ public class CozinhaServiceImpl implements CozinhaService {
         }
     }
     public Page<CozinhaEntity> obterPaginados(Pageable pageable) {
-        Sort sort = Sort.by("especialidade").ascending();
-        Pageable paginacao =
-                PageRequest.of(pageable.getPageNumber(),
-                        pageable.getPageSize(), sort);
-        return this.cozinhaRepository.findAll(paginacao);
+
+      try {
+          Sort sort = Sort.by("especialidade").ascending();
+          Pageable paginacao =
+                  PageRequest.of(pageable.getPageNumber(),
+                          pageable.getPageSize(), sort);
+          return this.cozinhaRepository.findAll(paginacao);
+      }catch (IllegalArgumentException e){
+          throw new ValidationException("Erro ao obter cozinhas paginadas", e);
+      }
     }
     @Override
-    public CozinhaEntity obterPorCodigo(Long codigo) {
-        return cozinhaRepository.findById(codigo)
-                .orElseThrow(() -> new ValidacaoException("Id da Cozinha informado não existe!"));
+    public ResponseEntity obterPorCodigo(Long codigo) {
+
+        try {
+
+            if (!cozinhaRepository.existsById(codigo)) {
+                throw new ValidacaoException("Id da Cozinha informada não existe!");
+            }
+
+            var cozinha = cozinhaRepository.getReferenceById(codigo);
+            return ResponseEntity.ok(new DadosDetalhamentoCozinhaDto(cozinha));
+
+
+        }catch (ValidacaoException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
 }

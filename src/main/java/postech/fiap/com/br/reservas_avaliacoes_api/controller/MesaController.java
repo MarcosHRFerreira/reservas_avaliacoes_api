@@ -66,19 +66,6 @@ public class MesaController {
 
     @GetMapping("/statusmesa/{idrestaurante},{status}")
     public ResponseEntity<Object> obterPorStatus(@PathVariable Long idrestaurante, @PathVariable Status_Mesa status) {
-//        try {
-//            ResponseEntity<Object> response = mesaService.obterPorStatus(idrestaurante, status);
-//
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                MesaEntity mesa = (MesaEntity) response.getBody();
-//                return ResponseEntity.ok(mesa);
-//            } else {
-//                return response; // Retorna a resposta de erro do serviço
-//            }
-//
-//        } catch (ValidacaoException e) {
-//            return ResponseEntity.notFound().build();
-//        }
 
         try {
             List<MesaEntity> mesas = mesaService.obterPorStatus(idrestaurante, status);

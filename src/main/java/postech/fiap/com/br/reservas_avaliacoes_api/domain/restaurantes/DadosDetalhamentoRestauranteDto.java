@@ -10,7 +10,7 @@ public record DadosDetalhamentoRestauranteDto(
         String cep,
         String complemento,
         String numero,
-        String uf,
+        String UF,
         String cidade,
         String capacidade,
         String funcionamento

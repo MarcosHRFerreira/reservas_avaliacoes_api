@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,5 +86,7 @@ public class CustomExceptionHandler {
         String bodyOfResponse = "Formato de dados inválido. Por favor, envie dados no formato JSON.";
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
+
+
 
 }

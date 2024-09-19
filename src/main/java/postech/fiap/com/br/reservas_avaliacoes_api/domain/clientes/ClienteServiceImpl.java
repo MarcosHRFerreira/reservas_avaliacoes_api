@@ -1,5 +1,6 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes;
 
+import jakarta.validation.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -49,18 +50,33 @@ public class ClienteServiceImpl implements ClienteService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
+    @Override
     public Page<ClienteEntity> obterPaginados(Pageable pageable) {
-        Sort sort = Sort.by("nome").ascending();
-        Pageable paginacao =
-                PageRequest.of(pageable.getPageNumber(),
-                        pageable.getPageSize(), sort);
-        return this.clienteRepository.findAll(paginacao);
+        try {
+            Sort sort = Sort.by("nome").ascending();
+            Pageable paginacao =
+                    PageRequest.of(pageable.getPageNumber(),
+                            pageable.getPageSize(), sort);
+            return this.clienteRepository.findAll(paginacao);
+        }catch (IllegalArgumentException e){
+            throw new ValidationException("Erro ao obter clientes paginados", e);
+        }
     }
     @Override
-    public ClienteEntity obterPorCodigo(Long codigo) {
-        return clienteRepository.findById(codigo)
-                .orElseThrow(() -> new ValidacaoException("Id do Cliente informado não existe!"));
+    public ResponseEntity<Object> obterPorCodigo(Long codigo) {
+        try {
+             if(!clienteRepository.existsById(codigo))
+             {
+                 throw new ValidacaoException("Id do Cliente informado não existe!");
+             }
+             var cliente = clienteRepository.getReferenceById(codigo);
+             return ResponseEntity.ok(new DadosDetalhamentoClienteDto(cliente));
+
+        }catch (ValidacaoException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        }
     }
+
 
 }

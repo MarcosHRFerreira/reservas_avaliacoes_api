@@ -1,10 +1,10 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantescozinhas;
 
+import jakarta.validation.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -70,17 +70,30 @@ public class RestauranteCozinhaServiceImpl implements RestauranteCozinhaService 
         }
     }
     @Override
-    public RestauranteCozinhaEntity obterPorCodigo(Long codigo) {
-        return restaurantecozinhaRepository.findById(codigo)
-                .orElseThrow(() -> new ValidacaoException("Id do Restaurante_Cozinha informado não existe!"));
+    public ResponseEntity obterPorCodigo(Long codigo) {
+
+        try {
+            if (!restaurantecozinhaRepository.existsById(codigo)) {
+                throw new ValidacaoException("Id do Restaurante_Cozinha informado não existe!");
+            }
+            var restaurantecozinha = restaurantecozinhaRepository.getReferenceById(codigo);
+            return ResponseEntity.ok(new DadosDetalhamentoRestauranteCozinha(restaurantecozinha));
+
+        }catch (ValidacaoException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
     @Override
     public Page<RestauranteCozinhaEntity> obterPaginados(Pageable pageable) {
-        Sort sort = Sort.by("id_restaurante_cozinha").ascending();
-        Pageable paginacao =
-                PageRequest.of(pageable.getPageNumber(),
-                        pageable.getPageSize(), sort);
-        return this.restaurantecozinhaRepository.findAll(paginacao);
+
+        try {
+             Pageable paginacao =
+             PageRequest.of(pageable.getPageNumber(),
+                    pageable.getPageSize());
+            return this.restaurantecozinhaRepository.findAll(paginacao);
+        }catch (IllegalArgumentException e){
+            throw new ValidationException("Erro ao obter restaurante_cozinhas paginadas", e);
+        }
     }
 
 }

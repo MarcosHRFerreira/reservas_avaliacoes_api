@@ -1,5 +1,6 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes;
 
+import jakarta.validation.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -73,36 +74,79 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     }
 
     @Override
-    public ResponseEntity<Void> excluirAvaliacao(Long codigo) {
+    public ResponseEntity<Object> excluirAvaliacao(Long codigo) {
           try {
+              if (!avaliacaoRepository.existsById(codigo)) {
+                  throw new ValidacaoException("Id da Avaliação informado não existe!");
+              }
               avaliacaoRepository.deleteById(codigo);
-              return ResponseEntity.noContent().build();
-          }catch (ErroExclusaoException e){
-              return ResponseEntity.badRequest().build();
+              return ResponseEntity.ok().build();
+
+          }catch (ErroExclusaoException e) {
+              return ResponseEntity.badRequest().body("Erro ao excluir: " + e.getMessage());
+          }catch(ValidacaoException e){
+              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
           }
     }
 
     @Override
     public Page<AvaliacaoEntity> obterPaginados(Pageable pageable) {
-        Pageable paginacao =
-                PageRequest.of(pageable.getPageNumber(),
-                        pageable.getPageSize());
-        return this.avaliacaoRepository.findAll(paginacao);
+
+        try {
+            Pageable paginacao =
+                    PageRequest.of(pageable.getPageNumber(),
+                            pageable.getPageSize());
+            return this.avaliacaoRepository.findAll(paginacao);
+
+        }catch  (IllegalArgumentException e){
+            throw new ValidationException("Erro ao obter avaliações paginadas", e);
+        }
     }
     @Override
-    public AvaliacaoEntity obterPorCodigo(Long codigo) {
-        return avaliacaoRepository.findById(codigo)
-                .orElseThrow(() -> new ValidacaoException("Id da Avaliação informado não existe!"));
+    @Transactional
+    public ResponseEntity obterPorCodigo(Long codigo) {
+
+        try {
+
+            if (!avaliacaoRepository.existsById(codigo)) {
+                throw new ValidacaoException("Id da Avaliação informado não existe!");
+            }
+            var avaliacao = avaliacaoRepository.getReferenceById(codigo);
+            return ResponseEntity.ok(new DadosDetalhamentoAvalizacaoDto(avaliacao));
+
+        }catch (ValidacaoException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
 
     public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30Dias(Long idRestaurante) {
-        List<Object[]> resultados = idRestaurante != null ?
-                avaliacaoRepository.getEstatisticasRestauranteUltimos30Dias(idRestaurante) :
-                avaliacaoRepository.getEstatisticasRestauranteUltimos30DiasTodos();
-        return processarResultados(resultados);
+
+        try {
+
+            if (idRestaurante != null && !restauranteRepository.existsById(idRestaurante)) {
+                throw new ValidacaoException("Id do Restaurante informado não existe!");
+            }
+
+            List<Object[]> resultados = idRestaurante != null ?
+                    avaliacaoRepository.getEstatisticasRestauranteUltimos30Dias(idRestaurante) :
+                    avaliacaoRepository.getEstatisticasRestauranteUltimos30DiasTodos();
+
+            if (resultados.isEmpty()) {
+                throw new ValidacaoException("Não foram encontradas estatísticas para o período solicitado.");
+            }
+
+            return processarResultados(resultados);
+
+        } catch (ValidacaoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+
     }
 
     public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30DiasTodos() {
+
         return getEstatisticasRestauranteUltimos30Dias(null);
     }
 
@@ -110,19 +154,25 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         if (resultados.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<EstatisticaRestauranteDto> estatisticas = new ArrayList<>();
 
-        for (Object[] resultado : resultados) {
-            String nome = (String) resultado[0];
-            Long totalAvaliacoes = (Long) resultado[1];
+        try {
 
-            BigDecimal mediaAvaliacaoBigDecimal = (BigDecimal) resultado[2];
-            mediaAvaliacaoBigDecimal = mediaAvaliacaoBigDecimal.setScale(2, RoundingMode.HALF_UP);
-            Double mediaAvaliacao = mediaAvaliacaoBigDecimal.doubleValue();
-            EstatisticaRestauranteDto estatistica = new EstatisticaRestauranteDto(nome, totalAvaliacoes, mediaAvaliacao);
-            estatisticas.add(estatistica);
+            List<EstatisticaRestauranteDto> estatisticas = new ArrayList<>();
+
+            for (Object[] resultado : resultados) {
+                String nome = (String) resultado[0];
+                Long totalAvaliacoes = (Long) resultado[1];
+
+                BigDecimal mediaAvaliacaoBigDecimal = (BigDecimal) resultado[2];
+                mediaAvaliacaoBigDecimal = mediaAvaliacaoBigDecimal.setScale(2, RoundingMode.HALF_UP);
+                Double mediaAvaliacao = mediaAvaliacaoBigDecimal.doubleValue();
+                EstatisticaRestauranteDto estatistica = new EstatisticaRestauranteDto(nome, totalAvaliacoes, mediaAvaliacao);
+                estatisticas.add(estatistica);
+            }
+            return ResponseEntity.ok(estatisticas);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(estatisticas);
     }
 }
 

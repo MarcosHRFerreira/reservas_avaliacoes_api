@@ -1,5 +1,6 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.reservas;
 
+import jakarta.validation.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.Status_Mesa;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteRepository;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -54,20 +56,16 @@ public class ReservaServiceImpl implements ReservaService {
                     reservaEntity.getIdcliente(),
                     reservaEntity.getIdrestaurante(),
                     reservaEntity.getDatahora().toLocalDate())) {
-                return ResponseEntity.badRequest().body("Já existe uma reserva com este ID do cliente e ID do restaurante e Data da reserva.");
+                throw new ValidacaoException("Já existe uma reserva com este ID do cliente e ID do restaurante e Data da reserva.");
             }
 
             List<MesaEntity> mesasDisponiveis = mesaRepository.findByStatusIsAndId_restaurante(reservaEntity.getIdrestaurante(), Status_Mesa.DISPONIVEL);
 
-            // Verificar se há mesas disponíveis
-            if (mesasDisponiveis.isEmpty()) {
-                return ResponseEntity.badRequest().body("Não há mesas disponíveis para este restaurante.");
+            ResponseEntity<Object> validacao = validarReserva(reservaEntity);
+            if (validacao != null) {
+                return validacao; // Retorna a resposta de erro da validação
             }
-            // Verificar se há mesas suficientes
-            if (mesasDisponiveis.size() < reservaEntity.getNumeromesas()) {
-                return ResponseEntity.badRequest().body("Não há mesas suficientes disponíveis para este restaurante. Exite(m) "
-                        + mesasDisponiveis.size() + " mesa(s) disponível" );
-            }
+
             List<MesaEntity> mesasReservadas = mesasDisponiveis.subList(0, reservaEntity.getNumeromesas());
             mesasReservadas.forEach(mesa -> {
                 mesa.setStatus(Status_Mesa.RESERVADA);
@@ -87,6 +85,15 @@ public class ReservaServiceImpl implements ReservaService {
     public ResponseEntity atualizar(DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto) {
         try {
 
+            if (dadosAtualizacaoReservaDto.idcliente() == null || dadosAtualizacaoReservaDto.idrestaurante() == null ||
+                    dadosAtualizacaoReservaDto.datahora() == null || dadosAtualizacaoReservaDto.numeropessoas() == null ||
+                    dadosAtualizacaoReservaDto.numeromesas() == null || dadosAtualizacaoReservaDto.status() == null ||
+                    dadosAtualizacaoReservaDto.idreserva()==null) {
+
+                throw new ValidacaoException("Os campos esperados são: idcliente, idrestaurante, datahora, numeropessoas, numeromesas, status");
+            }
+
+
             if (!clienteRepository.existsById(dadosAtualizacaoReservaDto.idcliente())) {
                 throw new ValidacaoException("Id do Cliente informado não existe!");
             }
@@ -95,6 +102,20 @@ public class ReservaServiceImpl implements ReservaService {
             }
             if (!reservaRepository.existsById(dadosAtualizacaoReservaDto.idreserva())) {
                 throw new ValidacaoException("Id da Reserva informado não existe!");
+            }
+
+            // Atualizar os dados da reserva com os dados do DTO
+
+            ReservaEntity reservaEntity = new ReservaEntity();
+
+            reservaEntity.setDatahora(dadosAtualizacaoReservaDto.datahora());
+            reservaEntity.setIdrestaurante(dadosAtualizacaoReservaDto.idrestaurante());
+            reservaEntity.setNumeromesas(dadosAtualizacaoReservaDto.numeromesas());
+            reservaEntity.setNumeropessoas(dadosAtualizacaoReservaDto.numeropessoas());
+
+            ResponseEntity<Object> validacao = validarReserva(reservaEntity);
+            if (validacao != null) {
+                return validacao; // Retorna a resposta de erro da validação
             }
 
             if (reservaRepository.findByid_clienteAndid_restauranteAnddata_reserva(
@@ -123,16 +144,29 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     public Page<ReservaEntity> obterPaginados(Pageable pageable) {
-        Pageable paginacao =
-                PageRequest.of(pageable.getPageNumber(),
-                        pageable.getPageSize());
-        return this.reservaRepository.findAll(paginacao);
+
+        try {
+            Pageable paginacao =
+                    PageRequest.of(pageable.getPageNumber(),
+                            pageable.getPageSize());
+            return this.reservaRepository.findAll(paginacao);
+        }catch (IllegalArgumentException e){
+            throw new ValidationException("Erro ao obter reservas paginadas", e);
+        }
     }
 
     @Override
-    public ReservaEntity obterPorCodigo(Long codigo) {
-        return reservaRepository.findById(codigo)
-                .orElseThrow(() -> new ValidacaoException("Id da Reserva informado não existe!"));
+    public ResponseEntity<Object> obterPorCodigo(Long codigo) {
+
+        try {
+            if(!reservaRepository.existsById(codigo)){
+                throw new ValidacaoException("Id da Reserva informado não existe!");
+            }
+            var reserva= reservaRepository.getReferenceById(codigo);
+            return ResponseEntity.ok(new DadosDetalhamentoReservaDto(reserva));
+        }catch (ValidacaoException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @Transactional
@@ -163,6 +197,36 @@ public class ReservaServiceImpl implements ReservaService {
         }catch  (Exception e) {
             throw new ValidacaoException("Erro ao liberar mesas");
         }
+    }
+
+    public ResponseEntity<Object> validarReserva(ReservaEntity reservaEntity) {
+        // Verificar se a data da reserva é válida
+        LocalDateTime now = LocalDateTime.now();
+        if (reservaEntity.getDatahora().isBefore(now)) {
+            return ResponseEntity.badRequest().body("Não será permitido datas passadas na reserva.");
+        }
+
+        // Verificar se há mesas disponíveis
+        List<MesaEntity> mesasDisponiveis = mesaRepository.findByStatusIsAndId_restaurante(reservaEntity.getIdrestaurante(), Status_Mesa.DISPONIVEL);
+        if (mesasDisponiveis.isEmpty()) {
+            return ResponseEntity.badRequest().body("Não há mesas disponíveis para este restaurante.");
+        }
+
+        // Verificar se o número de mesas é válido
+        if (mesasDisponiveis.size() < reservaEntity.getNumeromesas()) {
+            return ResponseEntity.badRequest().body("Não há mesas suficientes disponíveis para este restaurante. Exite(m) "
+                    + mesasDisponiveis.size() + " mesa(s) disponível" );
+        }
+
+        // Verificar se o número de pessoas é válido
+        if (reservaEntity.getNumeropessoas() > reservaEntity.getNumeromesas() * 4) {
+            return ResponseEntity.badRequest().body("A quantidade de pessoas na reserva excede a capacidade das mesas disponíveis. " +
+                    "Cada mesa suporta no máximo 4 pessoas. Mesa(s) disponível - "
+                    + mesasDisponiveis.size() );
+        }
+
+        // Se todas as validações passarem, retorna null para indicar sucesso
+        return null;
     }
 
 }

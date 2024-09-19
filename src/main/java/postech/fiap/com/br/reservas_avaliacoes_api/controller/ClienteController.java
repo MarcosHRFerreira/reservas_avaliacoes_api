@@ -46,10 +46,10 @@ public class ClienteController {
         return ResponseEntity.ok(clientes);
     }
     @GetMapping("/{codigo}")
-    public ResponseEntity<ClienteEntity> obterPorCodigo(@PathVariable Long codigo) {
+    public ResponseEntity<Object> obterPorCodigo(@PathVariable Long codigo) {
         try {
-            ClienteEntity cliente = this.clienteService.obterPorCodigo(codigo);
-            return ResponseEntity.ok(cliente);
+            return this.clienteService.obterPorCodigo(codigo);
+
         } catch (ValidacaoException e) {
             return ResponseEntity.notFound().build();
         }

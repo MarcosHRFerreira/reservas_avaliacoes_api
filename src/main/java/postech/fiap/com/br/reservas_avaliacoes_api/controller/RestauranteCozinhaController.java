@@ -49,8 +49,8 @@ public class RestauranteCozinhaController {
     @GetMapping("/{codigo}")
     public ResponseEntity<RestauranteCozinhaEntity> obterPorCodigo(@PathVariable Long codigo) {
         try {
-            RestauranteCozinhaEntity restaurantecozinha = this.restaurantecozinhaService.obterPorCodigo(codigo);
-            return ResponseEntity.ok(restaurantecozinha);
+           return this.restaurantecozinhaService.obterPorCodigo(codigo);
+
         } catch (ValidacaoException e) {
             return ResponseEntity.notFound().build();
         }

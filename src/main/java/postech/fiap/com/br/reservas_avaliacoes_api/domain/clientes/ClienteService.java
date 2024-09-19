@@ -12,7 +12,7 @@ public interface ClienteService {
 
     public Page<ClienteEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
-    public ClienteEntity obterPorCodigo(Long codigo);
+    public ResponseEntity<Object> obterPorCodigo(Long codigo);
 
     public ResponseEntity<Object> atualizar(DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto);
 

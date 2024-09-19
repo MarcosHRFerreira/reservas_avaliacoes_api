@@ -62,7 +62,7 @@ public class RestauranteEntity {
     @NotBlank(message = "A UF é obrigatório")
     @Size(min = 2, max=2, message = "A UF deve ter no mínimo 2 caracteres e no maxímo 2")
     @Pattern(regexp = "^[A-Za-z]{2}$", message = "A UF deve conter apenas letras")
-    private String uf;
+    private String UF;
 
     @NotNull
     @NotBlank(message = "A cidade é obrigatória")
@@ -92,7 +92,7 @@ public class RestauranteEntity {
                 ", cep='" + cep + '\'' +
                 ", complemento='" + complemento + '\'' +
                 ", numero='" + numero + '\'' +
-                ", uf='" + uf + '\'' +
+                ", uf='" + UF + '\'' +
                 ", cidade='" + cidade + '\'' +
                 ", capacidade='" + capacidade + '\'' +
                 ", funcionamento='" + funcionamento + '\'' +
@@ -188,11 +188,11 @@ public class RestauranteEntity {
     }
 
     public String getUf() {
-        return uf;
+        return UF;
     }
 
-    public void setUf(String uf) {
-        this.uf = uf;
+    public void setUf(String UF) {
+        this.UF = UF;
     }
 
     public String getCidade() {
@@ -246,8 +246,8 @@ public class RestauranteEntity {
         if(dados.numero() != null){
             this.numero=dados.numero().toUpperCase();
         }
-        if(dados.uf() != null){
-            this.uf=dados.uf().toUpperCase();
+        if(dados.UF() != null){
+            this.UF=dados.UF().toUpperCase();
         }
         if(dados.cidade() != null){
             this.cidade=dados.cidade().toUpperCase();

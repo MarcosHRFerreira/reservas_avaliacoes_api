@@ -11,8 +11,14 @@ public interface RestauranteService {
 
     public Page<RestauranteEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
-    public RestauranteEntity obterPorCodigo(Long codigo);
+    public ResponseEntity<Object> obterPorCodigo(Long codigo);
 
     public ResponseEntity<Object> atualizar(DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto);
+
+    public ResponseEntity<Object> obterPorNome(String nome);
+
+    public ResponseEntity<Object> obterPorUF(String uf);
+
+    public ResponseEntity<Object> obterRestaurantesPorCozinha(Long codcozinha);
 
 }

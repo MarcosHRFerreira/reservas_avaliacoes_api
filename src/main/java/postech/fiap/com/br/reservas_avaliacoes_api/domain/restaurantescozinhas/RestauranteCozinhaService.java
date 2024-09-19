@@ -13,7 +13,7 @@ public interface RestauranteCozinhaService {
 
     public ResponseEntity<Object> atualizar(DadosAtualizacaoRestauranteCozinhaDto dadosAtualizacaoRestauranteCozinhaDto);
 
-    public RestauranteCozinhaEntity obterPorCodigo(Long codigo);
+    public ResponseEntity obterPorCodigo(Long codigo);
 
     public Page<RestauranteCozinhaEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 

@@ -19,7 +19,7 @@ public record DadosAtualizacaoRestauranteDto(
 
         String numero,
 
-        String uf,
+        String UF,
 
         String cidade,
 

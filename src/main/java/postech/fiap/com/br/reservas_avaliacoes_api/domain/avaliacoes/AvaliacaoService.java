@@ -16,11 +16,11 @@ public interface AvaliacaoService {
 
     public Page<AvaliacaoEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
-    public AvaliacaoEntity obterPorCodigo(Long codigo);
+    public ResponseEntity<Object> obterPorCodigo(Long codigo);
 
     public ResponseEntity<Object> atualizar(DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto);
 
-    public ResponseEntity<Void> excluirAvaliacao(Long codigo);
+    public ResponseEntity<Object> excluirAvaliacao(Long codigo);
 
     public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30Dias(Long idRestaurante);
 

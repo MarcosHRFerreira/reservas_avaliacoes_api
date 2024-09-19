@@ -11,7 +11,7 @@ public interface CozinhaService {
 
     public Page<CozinhaEntity> obterPaginados(@PageableDefault(size = 10) Pageable pageable);
 
-    public CozinhaEntity obterPorCodigo(Long codigo);
+    public ResponseEntity obterPorCodigo(Long codigo);
 
     public ResponseEntity<Object> atualizar(DadosAtualizacaoCozinhaDto dadosAtualizacaoCozinhaDto);
 

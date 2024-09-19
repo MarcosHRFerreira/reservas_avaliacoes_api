@@ -1,5 +1,7 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes;
 
+import jakarta.persistence.Tuple;
+import jakarta.validation.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RestauranteServiceImpl implements RestauranteService {
@@ -49,17 +55,96 @@ public class RestauranteServiceImpl implements RestauranteService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<Object> obterPorNome(String nome) {
+
+            try {
+                // Busca os restaurantes com o nome que contém a string informada
+                List<RestauranteEntity> restaurantes = restauranteRepository.findByNomeContaining(nome);
+
+                if (restaurantes.isEmpty()) {
+                    throw new ValidacaoException("Nenhum restaurante encontrado com o nome informado.");
+                }
+
+                // Retorna a lista de restaurantes encontrados
+                return ResponseEntity.ok(restaurantes);
+
+            } catch (ValidacaoException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            }
+
+    }
+
+    @Override
+    public ResponseEntity<Object> obterPorUF(String UF) {
+
+        try {
+            // Busca os restaurantes com o nome que contém a string informada
+            List<RestauranteEntity> restaurantes = restauranteRepository.findByUFContaining(UF);
+
+            if (restaurantes.isEmpty()) {
+                throw new ValidacaoException("Nenhum restaurante encontrado com a UF informada.");
+            }
+
+            // Retorna a lista de restaurantes encontrados
+            return ResponseEntity.ok(restaurantes);
+
+        } catch (ValidacaoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public ResponseEntity<Object> obterRestaurantesPorCozinha(Long codcozinha) {
+        try {
+            // Busca os restaurantes com a cozinha que contém a string informada
+            List<DadosDetalhamentoRestauranteEspecialidadeDto> restaurantes = restauranteRepository.findRestaurantesByCozinhaEspecialidadeContaining(codcozinha);
+
+
+            if (restaurantes.isEmpty()) {
+                throw new ValidacaoException("Nenhum restaurante encontrado com a cozinha informada.");
+            }
+
+            // Retorna a lista de restaurantes encontrados
+            return ResponseEntity.ok(restaurantes);
+
+        } catch (ValidacaoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @Override
        public Page<RestauranteEntity> obterPaginados(Pageable pageable) {
-        Sort sort = Sort.by("nome").ascending();
-        Pageable paginacao =
-                PageRequest.of(pageable.getPageNumber(),
-                        pageable.getPageSize(), sort);
-        return this.restauranteRepository.findAll(paginacao);
+
+        try {
+            Sort sort = Sort.by("nome").ascending();
+            Pageable paginacao =
+                    PageRequest.of(pageable.getPageNumber(),
+                            pageable.getPageSize(), sort);
+            return this.restauranteRepository.findAll(paginacao);
+        }catch (IllegalArgumentException e){
+            throw new ValidationException("Erro ao obter restaurantes paginados", e);
+        }
     }
+
     @Override
-    public RestauranteEntity obterPorCodigo(Long codigo) {
-        return restauranteRepository.findById(codigo)
-                .orElseThrow(() -> new ValidacaoException("Id do Restaurante informado não existe!"));
+    public ResponseEntity obterPorCodigo(Long codigo) {
+
+        try{
+            if (!restauranteRepository.existsById(codigo)) {
+                throw new ValidacaoException("Id do restaurante informado não existe!");
+            }
+            var restaurante = restauranteRepository.getReferenceById(codigo);
+            return ResponseEntity.ok(new DadosDetalhamentoRestauranteDto(restaurante));
+
+        }catch (ValidacaoException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
+
+
+
 }

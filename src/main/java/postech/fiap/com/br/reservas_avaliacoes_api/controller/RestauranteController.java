@@ -40,18 +40,47 @@ public class RestauranteController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @GetMapping("/paginar")
+    @GetMapping(value = "/paginar")
     public ResponseEntity<Page<RestauranteEntity>> obterPaginados(@PageableDefault(size = 10) Pageable pageable){
         Page<RestauranteEntity> restaurantes = this.restauranteService.obterPaginados(pageable);
         return ResponseEntity.ok(restaurantes);
     }
-    @GetMapping("/{codigo}")
-    public ResponseEntity<RestauranteEntity> obterPorCodigo(@PathVariable Long codigo) {
+    @GetMapping(value = "/{codigo}")
+    public ResponseEntity<Object> obterPorCodigo(@PathVariable Long codigo) {
         try {
-            RestauranteEntity restaurante = this.restauranteService.obterPorCodigo(codigo);
-            return ResponseEntity.ok(restaurante);
+            return this.restauranteService.obterPorCodigo(codigo);
         } catch (ValidacaoException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping(value = "/nome/{nome}")
+    public ResponseEntity<Object> obterPorNome (@PathVariable String nome) {
+        try {
+            return this.restauranteService.obterPorNome(nome);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/UF/{UF}")
+    public ResponseEntity<Object> obterPorUF (@PathVariable String UF) {
+        try {
+            return this.restauranteService.obterPorUF(UF);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/cozinha/{idcozinha}")
+    public ResponseEntity<Object> obterRestaurantesPorCozinha(@PathVariable Long idcozinha) {
+        try {
+            return this.restauranteService.obterRestaurantesPorCozinha(idcozinha);
+
+        } catch (ValidacaoException e) {
+            return ResponseEntity.notFound().build();
+
+        }
+    }
+
 }
