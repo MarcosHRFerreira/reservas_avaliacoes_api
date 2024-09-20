@@ -13,6 +13,7 @@ import postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes.ClienteReposi
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.MesaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.MesaRepository;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.Status_Mesa;
+import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteRepository;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
@@ -129,7 +130,15 @@ public class ReservaServiceImpl implements ReservaService {
                 if (dadosAtualizacaoReservaDto.status() == Status_Reserva.CANCELADO) {
                     liberarMesas(dadosAtualizacaoReservaDto.idrestaurante(), dadosAtualizacaoReservaDto.status(),
                             dadosAtualizacaoReservaDto.numeromesas());
+                }else {
+                    List<MesaEntity> mesasDisponiveis = mesaRepository.findByStatusIsAndId_restaurante(reservaEntity.getIdrestaurante(), Status_Mesa.DISPONIVEL);
+                    List<MesaEntity> mesasReservadas = mesasDisponiveis.subList(0, reservaEntity.getNumeromesas());
+                    mesasReservadas.forEach(mesa -> {
+                        mesa.setStatus(Status_Mesa.RESERVADA);
+                        mesaRepository.save(mesa);
+                    });
                 }
+
                 return ResponseEntity.ok(new DadosDetalhamentoReservaDto(reserva));
             } else {
                 return ResponseEntity.notFound().build();
@@ -167,6 +176,26 @@ public class ReservaServiceImpl implements ReservaService {
         }catch (ValidacaoException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseEntity<Object> obterPorNomeCliente(String nome) {
+
+        try {
+
+            List<ReservaEntity> reserva = reservaRepository.findReservasByNomeCliente(nome);
+
+            if (reserva.isEmpty()) {
+                throw new ValidacaoException("Nenhum nome encontrado na reserva.");
+            }
+
+            return ResponseEntity.ok(reserva);
+
+        } catch (ValidacaoException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
+
     }
 
     @Transactional

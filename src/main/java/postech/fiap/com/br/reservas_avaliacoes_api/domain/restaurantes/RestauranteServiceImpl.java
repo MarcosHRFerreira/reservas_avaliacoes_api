@@ -1,6 +1,5 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes;
 
-import jakarta.persistence.Tuple;
 import jakarta.validation.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RestauranteServiceImpl implements RestauranteService {
@@ -77,11 +75,11 @@ public class RestauranteServiceImpl implements RestauranteService {
     }
 
     @Override
-    public ResponseEntity<Object> obterPorUF(String UF) {
+    public ResponseEntity<Object> obterPorUF(String uf) {
 
         try {
             // Busca os restaurantes com o nome que contém a string informada
-            List<RestauranteEntity> restaurantes = restauranteRepository.findByUFContaining(UF);
+            List<RestauranteEntity> restaurantes = restauranteRepository.findRestauranteUf(uf);
 
             if (restaurantes.isEmpty()) {
                 throw new ValidacaoException("Nenhum restaurante encontrado com a UF informada.");
@@ -97,10 +95,10 @@ public class RestauranteServiceImpl implements RestauranteService {
     }
 
     @Override
-    public ResponseEntity<Object> obterRestaurantesPorCozinha(Long codcozinha) {
+    public ResponseEntity<Object> obterRestaurantesPorCozinha(String cozinha) {
         try {
             // Busca os restaurantes com a cozinha que contém a string informada
-            List<DadosDetalhamentoRestauranteEspecialidadeDto> restaurantes = restauranteRepository.findRestaurantesByCozinhaEspecialidadeContaining(codcozinha);
+            List<RestauranteEntity> restaurantes = restauranteRepository.findRestaurantesCozinha(cozinha);
 
 
             if (restaurantes.isEmpty()) {

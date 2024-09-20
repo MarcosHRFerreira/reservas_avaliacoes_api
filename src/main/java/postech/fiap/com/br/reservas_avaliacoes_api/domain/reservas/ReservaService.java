@@ -17,4 +17,7 @@ public interface ReservaService {
 
     public ResponseEntity<Object> obterPorCodigo(Long codigo);
 
+    public ResponseEntity<Object> obterPorNomeCliente(String nome);
+
+
 }

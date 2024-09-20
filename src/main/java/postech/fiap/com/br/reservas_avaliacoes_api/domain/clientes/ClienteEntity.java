@@ -113,13 +113,13 @@ public class ClienteEntity {
         return nome;
     }
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nome = nome.toLowerCase();
     }
     public String getEmail() {
         return email;
     }
         public void setEmail(String email) {
-        this.email = email;
+        this.email = email.toLowerCase();
     }
     public String getTelefone() {
         return telefone;
@@ -131,13 +131,13 @@ public class ClienteEntity {
         return logradouro;
     }
     public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
+        this.logradouro = logradouro.toLowerCase();
     }
     public String getBairro() {
         return bairro;
     }
     public void setBairro(String bairro) {
-        this.bairro = bairro;
+        this.bairro = bairro.toLowerCase();
     }
     public String getCep() {
         return cep;
@@ -149,56 +149,56 @@ public class ClienteEntity {
         return complemento;
     }
     public void setComplemento(String complemento) {
-        this.complemento = complemento;
+        this.complemento = complemento.toLowerCase();
     }
     public String getNumero() {
         return numero;
     }
     public void setNumero(String numero) {
-        this.numero = numero;
+        this.numero = numero.toLowerCase();
     }
     public String getUf() {
         return uf;
     }
     public void setUf(String uf) {
-        this.uf = uf;
+        this.uf = uf.toLowerCase();
     }
     public String getCidade() {
         return cidade;
     }
     public void setCidade(String cidade) {
-        this.cidade = cidade;
+        this.cidade = cidade.toLowerCase();
     }
     public void atualizarInformacoes(DadosAtualizacaoClienteDto dados) {
         if (dados.nome() != null) {
-            this.nome = dados.nome().toUpperCase();
+            this.nome = dados.nome().toLowerCase();
         }
         if (dados.email() != null) {
-            this.email = dados.email().toUpperCase();
+            this.email = dados.email().toLowerCase();
         }
         if (dados.telefone() != null) {
             this.telefone = dados.telefone();
         }
         if (dados.logradouro() != null) {
-            this.logradouro = dados.logradouro().toUpperCase();
+            this.logradouro = dados.logradouro().toLowerCase();
         }
         if (dados.bairro() != null) {
-            this.bairro = dados.bairro().toUpperCase();
+            this.bairro = dados.bairro().toLowerCase();
         }
         if (dados.cep() != null) {
-            this.cep = dados.cep().toUpperCase();
+            this.cep = dados.cep().toLowerCase();
         }
         if (dados.complemento() != null) {
-            this.complemento = dados.complemento().toUpperCase();
+            this.complemento = dados.complemento().toLowerCase();
         }
         if (dados.numero() != null) {
-            this.numero = dados.numero().toUpperCase();
+            this.numero = dados.numero().toLowerCase();
         }
         if (dados.uf() != null) {
-            this.uf = dados.uf().toUpperCase();
+            this.uf = dados.uf().toLowerCase();
         }
         if (dados.cidade() != null) {
-            this.cidade = dados.cidade().toUpperCase();
+            this.cidade = dados.cidade().toLowerCase();
         }
     }
 }

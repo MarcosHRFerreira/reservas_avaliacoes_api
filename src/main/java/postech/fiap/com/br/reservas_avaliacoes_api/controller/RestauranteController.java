@@ -63,19 +63,19 @@ public class RestauranteController {
         }
     }
 
-    @GetMapping(value = "/UF/{UF}")
-    public ResponseEntity<Object> obterPorUF (@PathVariable String UF) {
+    @GetMapping(value = "/UF/{uf}")
+    public ResponseEntity<Object> obterPorUF (@PathVariable String uf) {
         try {
-            return this.restauranteService.obterPorUF(UF);
+            return this.restauranteService.obterPorUF(uf.toLowerCase());
         } catch (ValidacaoException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping(value = "/cozinha/{idcozinha}")
-    public ResponseEntity<Object> obterRestaurantesPorCozinha(@PathVariable Long idcozinha) {
+    @GetMapping(value = "/cozinha/{cozinha}")
+    public ResponseEntity<Object> obterRestaurantesPorCozinha(@PathVariable String cozinha) {
         try {
-            return this.restauranteService.obterRestaurantesPorCozinha(idcozinha);
+            return this.restauranteService.obterRestaurantesPorCozinha(cozinha.toLowerCase());
 
         } catch (ValidacaoException e) {
             return ResponseEntity.notFound().build();

@@ -22,7 +22,9 @@ public record RestauranteDto(
 
          String funcionamento,
 
-         String capacidade
+         String capacidade,
+
+         String cozinha
 
 ) {
 }

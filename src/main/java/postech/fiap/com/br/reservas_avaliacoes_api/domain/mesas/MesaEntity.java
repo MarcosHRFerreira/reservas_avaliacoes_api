@@ -36,12 +36,6 @@ public class MesaEntity {
     @Enumerated(EnumType.STRING)
     private Status_Mesa status = Status_Mesa.DISPONIVEL;
 
-//    public MesaEntity(Long idrestaurante, String numero, Status_Mesa status) {
-//        this.idrestaurante = idrestaurante;
-//        this.numero = numero;
-//        this.status = status;
-//    }
-
 
     public Long getIdmesa() {
         return idmesa;

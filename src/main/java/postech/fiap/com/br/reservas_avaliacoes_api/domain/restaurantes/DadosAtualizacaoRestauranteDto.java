@@ -19,12 +19,14 @@ public record DadosAtualizacaoRestauranteDto(
 
         String numero,
 
-        String UF,
+        String uf,
 
         String cidade,
 
         String funcionamento,
 
-        String capacidade
+        String capacidade,
+
+        String cozinha
 ) {
 }

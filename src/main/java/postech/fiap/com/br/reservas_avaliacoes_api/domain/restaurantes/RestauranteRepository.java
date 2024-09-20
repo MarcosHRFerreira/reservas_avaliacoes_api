@@ -17,12 +17,9 @@ public interface RestauranteRepository extends JpaRepository <RestauranteEntity,
 
     List<RestauranteEntity> findByNomeContaining(String nome);
 
-    List<RestauranteEntity> findByUFContaining(String UF);
+    @Query(value = "SELECT * FROM restaurantes WHERE lower(uf) LIKE '%'||lower(:uf)||'%'", nativeQuery = true)
+    List<RestauranteEntity> findRestauranteUf(String uf);
 
-    @Query(value = "SELECT  r.idrestaurante, r.nome , r.email, r.telefone,  r.logradouro, " +
-    "r.bairro, r.cep, r.complemento, r.numero, r.uf, r.cidade, r.funcionamento, r.capacidade, c.especialidade " +
-    " FROM Restaurantes r JOIN restaurantes_cozinhas rc ON r.idrestaurante = rc.idrestaurante  JOIN " +
-    " Cozinhas c ON rc.idcozinha = c.idcozinha WHERE c.idcozinha =:codcozinha" ,nativeQuery = true)
-
-    List<DadosDetalhamentoRestauranteEspecialidadeDto> findRestaurantesByCozinhaEspecialidadeContaining(Long codcozinha);
+    @Query(value = "SELECT * FROM restaurantes WHERE lower(cozinha) LIKE '%'||lower(:cozinha)||'%'", nativeQuery = true)
+    List<RestauranteEntity> findRestaurantesCozinha(String cozinha);
 }

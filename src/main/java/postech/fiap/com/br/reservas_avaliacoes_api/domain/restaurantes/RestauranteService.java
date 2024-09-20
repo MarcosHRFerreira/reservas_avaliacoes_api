@@ -19,6 +19,6 @@ public interface RestauranteService {
 
     public ResponseEntity<Object> obterPorUF(String uf);
 
-    public ResponseEntity<Object> obterRestaurantesPorCozinha(Long codcozinha);
+    public ResponseEntity<Object> obterRestaurantesPorCozinha(String codcozinha);
 
 }

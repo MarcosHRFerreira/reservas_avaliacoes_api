@@ -18,7 +18,7 @@ public class DadosDetalhamentoRestauranteEspecialidadeDto {
     private String cep;
     private String complemento;
     private String numero;
-    private String UF;
+    private String uf;
     private  String cidade;
     private String capacidade;
     private String funcionamento;

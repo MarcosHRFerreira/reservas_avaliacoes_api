@@ -11,4 +11,5 @@ CREATE TABLE IF NOT EXISTS restaurantes (
     uf CHAR(2) NOT NULL,
     cidade VARCHAR(100) NOT NULL,
     funcionamento VARCHAR(200) NOT NULL,
-    capacidade VARCHAR(100) NOT NULL );
+    capacidade VARCHAR(100) NOT NULL,
+    cozinha VARCHAR(100) NOT NULL );

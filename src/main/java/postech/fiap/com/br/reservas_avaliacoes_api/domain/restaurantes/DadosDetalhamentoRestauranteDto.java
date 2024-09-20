@@ -10,10 +10,11 @@ public record DadosDetalhamentoRestauranteDto(
         String cep,
         String complemento,
         String numero,
-        String UF,
+        String uf,
         String cidade,
         String capacidade,
-        String funcionamento
+        String funcionamento,
+        String cozinha
 ) {
 
     public DadosDetalhamentoRestauranteDto(RestauranteEntity restaurante){
@@ -29,7 +30,8 @@ public record DadosDetalhamentoRestauranteDto(
                 restaurante.getUf(),
                 restaurante.getCidade(),
                 restaurante.getFuncionamento(),
-                restaurante.getCapacidade()
+                restaurante.getCapacidade(),
+                restaurante.getCozinha()
         );
     }
 }

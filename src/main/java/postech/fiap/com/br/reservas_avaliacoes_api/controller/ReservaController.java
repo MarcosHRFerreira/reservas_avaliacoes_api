@@ -52,4 +52,14 @@ public class ReservaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/nome_cliente/{nome}")
+    public ResponseEntity obterPorCodigo(@PathVariable String nome) {
+        try {
+            return this.reservaService.obterPorNomeCliente(nome);
+        } catch (ValidacaoException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
