@@ -1,6 +1,6 @@
 
  # Primeira etapa: Construir a aplicação
-FROM maven:3.9.5-openjdk-17 AS build
+FROM amazoncorretto:17
 
 WORKDIR /workspace
 
@@ -14,7 +14,7 @@ ARG MAVEN_SKIP_TEST=false
 RUN if [ "$MAVEN_SKIP_TEST" = "true" ] ; then mvn clean package -DskipTests ; else mvn clean package ; fi
 
 # Segunda etapa: Rodar a aplicação
-FROM openjdk:17-alpine
+FROM amazoncorretto:17
 
 LABEL maintainer="marcos@marcos.net"
 LABEL version="1.0"
