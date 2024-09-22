@@ -84,6 +84,7 @@ public class RestauranteServiceTest {
             restauranteEntity.setTelefone("1234567890");
             restauranteEntity.setFuncionamento("08:00 as 17:00");
             restauranteEntity.setCapacidade("100 lugares");
+            restauranteEntity.setCozinha("japonesa");
 
             when(restauranteRepository.existsBynomeAndEmail(restauranteEntity.getNome(), restauranteEntity.getEmail())).thenReturn(false);
             when(restauranteRepository.existsByEmail(restauranteEntity.getEmail())).thenReturn(true);
@@ -119,7 +120,8 @@ public class RestauranteServiceTest {
                     "SP",
                     "sao carlos",
                     "08:00 as 17:00",
-                     "100 lugares");
+                     "100 lugares",
+                    "japonesa");
 
             RestauranteEntity restauranteEntity = new RestauranteEntity();
             restauranteEntity.setNome("Restaurante do Zeze");
@@ -133,6 +135,7 @@ public class RestauranteServiceTest {
             restauranteEntity.setTelefone("1234567890");
             restauranteEntity.setFuncionamento("08:00 as 17:00");
             restauranteEntity.setCapacidade("100 lugares");
+            restauranteEntity.setCozinha("japonesa");
 
             when(restauranteRepository.existsById(idRestaurante)).thenReturn(true);
             when(restauranteRepository.getReferenceById(idRestaurante)).thenReturn(restauranteEntity);
@@ -162,7 +165,8 @@ public class RestauranteServiceTest {
                     "SP",
                     "sao carlos",
                     "08:00 as 17:00",
-                    "100 lugares");
+                    "100 lugares",
+                    "japonesa");
 
             when(restauranteRepository.existsById(idRestaurante)).thenReturn(false);
 
@@ -185,8 +189,8 @@ public class RestauranteServiceTest {
             Pageable pageable = PageRequest.of(0, 10, Sort.by("nome").ascending());
             List<RestauranteEntity> restaurantes = new ArrayList<>();
 
-            restaurantes.add(new RestauranteEntity(1L, "Restaurante do Zeze","resssstauranteze@teste.com.br","1234567890","rua do ze","bairro do ze","12345678","","2","SP","sao carlos","08:00 as 17:00","100 lugares"));
-            restaurantes.add(new RestauranteEntity(2L, "Restaurante do Ze","restsauranteze@teste.com.br","1234567890","rua do ze","bairro do ze","12345678","","2","SP","sao carlos","08:00 as 17:00","100 lugares"));
+            restaurantes.add(new RestauranteEntity(1L, "Restaurante do Zeze","resssstauranteze@teste.com.br","1234567890","rua do ze","bairro do ze","12345678","","2","SP","sao carlos","08:00 as 17:00","100 lugares","japonesa"));
+            restaurantes.add(new RestauranteEntity(2L, "Restaurante do Ze","restsauranteze@teste.com.br","1234567890","rua do ze","bairro do ze","12345678","","2","SP","sao carlos","08:00 as 17:00","100 lugares","japonsesa"));
 
             Page<RestauranteEntity> page = new org.springframework.data.domain.PageImpl<>(restaurantes, pageable, restaurantes.size());
             when(restauranteRepository.findAll(any(Pageable.class))).thenReturn(page);
@@ -206,7 +210,7 @@ public class RestauranteServiceTest {
         void obterPorCodigo_quandoRestauranteExiste_deveRetornarOk() {
             // Arrange
             Long codigo = 1L;
-            RestauranteEntity restauranteEntity = new RestauranteEntity(codigo, "Restaurante do Zeze","resssstauranteze@teste.com.br","1234567890","rua do ze","bairro do ze","12345678","","2","SP","sao carlos","08:00 as 17:00","100 lugares");
+            RestauranteEntity restauranteEntity = new RestauranteEntity(codigo, "Restaurante do Zeze","resssstauranteze@teste.com.br","1234567890","rua do ze","bairro do ze","12345678","","2","SP","sao carlos","08:00 as 17:00","100 lugares","japonesa");
             when(restauranteRepository.existsById(codigo)).thenReturn(true);
             when(restauranteRepository.getReferenceById(codigo)).thenReturn(restauranteEntity);
 

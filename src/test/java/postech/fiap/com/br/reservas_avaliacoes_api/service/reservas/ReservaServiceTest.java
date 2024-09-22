@@ -1,6 +1,5 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.service.reservas;
 
-import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -63,13 +62,13 @@ public class ReservaServiceTest {
         @Test
         void cadastrar_quandoReservaValida_deveRetornarOk() {
             // Arrange
-            Long idCliente = 1L;
-            Long idRestaurante = 1L;
+            Long idCliente = 2L;
+            Long idRestaurante = 3L;
             LocalDateTime dataHora = LocalDateTime.now();
 
-            ReservaEntity reservaEntity = new ReservaEntity(1L, 1L, 1L, dataHora, 2, 1, Status_Reserva.RESERVADO);
+            ReservaEntity reservaEntity = new ReservaEntity(3L, 2L, 3L, dataHora, 2, 1, Status_Reserva.RESERVADO);
+
             ClienteEntity clienteEntity = new ClienteEntity();
-            clienteEntity.setIdcliente(1L);
             clienteEntity.setNome("Ze");
             clienteEntity.setEmail("ze@teste.com.br");
             clienteEntity.setLogradouro("rua do ze");
@@ -81,7 +80,6 @@ public class ReservaServiceTest {
             clienteEntity.setTelefone("1234567890");
 
             RestauranteEntity restauranteEntity = new RestauranteEntity();
-            restauranteEntity.setIdrestaurante(1L);
             restauranteEntity.setNome("Restaurante do Ze");
             restauranteEntity.setEmail("restauranteze@teste.com.br");
             restauranteEntity.setLogradouro("rua do ze");
@@ -96,6 +94,7 @@ public class ReservaServiceTest {
             mesasDisponiveis.add(new MesaEntity(1L, 1L, "4", Status_Mesa.DISPONIVEL));
             mesasDisponiveis.add(new MesaEntity(2L, 1L, "3", Status_Mesa.DISPONIVEL));
 
+
             when(clienteRepository.existsById(idCliente)).thenReturn(true);
             when(restauranteRepository.existsById(idRestaurante)).thenReturn(true);
             when(reservaRepository.findByid_clienteAndid_restauranteAnddata_reserva(idCliente, idRestaurante, dataHora.toLocalDate())).thenReturn(false);
@@ -109,6 +108,8 @@ public class ReservaServiceTest {
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
             assertTrue(response.hasBody());
 
+
+
             verify(clienteRepository).existsById(idCliente);
             verify(restauranteRepository).existsById(idRestaurante);
             verify(reservaRepository).findByid_clienteAndid_restauranteAnddata_reserva(idCliente, idRestaurante, dataHora.toLocalDate());
@@ -121,33 +122,33 @@ public class ReservaServiceTest {
         @Test
         void cadastrar_quandoClienteNaoExiste_deveRetornarNotFound() {
             // Arrange
-            Long idCliente = 3L;
-            Long idRestaurante = 2L;
+            Long idCliente = 5L;
+            Long idRestaurante = 3L;
             LocalDateTime dataHora = LocalDateTime.now();
 
-            ReservaEntity reservaEntity = new ReservaEntity(1L, 3L, 1L, dataHora, 2, 1, Status_Reserva.RESERVADO);
+            ReservaEntity reservaEntity = new ReservaEntity(1L, 5L, 3L, dataHora, 2, 1, Status_Reserva.RESERVADO);
 
-            ClienteEntity clienteEntity = new ClienteEntity();
-            clienteEntity.setNome("Ze");
-            clienteEntity.setEmail("ze@teste.com.br");
-            clienteEntity.setLogradouro("rua do ze");
-            clienteEntity.setBairro("bairro do ze");
-            clienteEntity.setCep("12345678");
-            clienteEntity.setUf("SP");
-            clienteEntity.setCidade("Cidade do Ze");
-            clienteEntity.setNumero("2");
-            clienteEntity.setTelefone("1234567890");
-
-            RestauranteEntity restauranteEntity = new RestauranteEntity();
-            restauranteEntity.setNome("Restaurante do Ze");
-            restauranteEntity.setEmail("restauranteze@teste.com.br");
-            restauranteEntity.setLogradouro("rua do ze");
-            restauranteEntity.setBairro("bairro do ze");
-            restauranteEntity.setCep("12345678");
-            restauranteEntity.setUf("SP");
-            restauranteEntity.setCidade("Cidade do Ze");
-            restauranteEntity.setNumero("2");
-            restauranteEntity.setTelefone("1234567890");
+//            ClienteEntity clienteEntity = new ClienteEntity();
+//            clienteEntity.setNome("Ze");
+//            clienteEntity.setEmail("ze@teste.com.br");
+//            clienteEntity.setLogradouro("rua do ze");
+//            clienteEntity.setBairro("bairro do ze");
+//            clienteEntity.setCep("12345678");
+//            clienteEntity.setUf("SP");
+//            clienteEntity.setCidade("Cidade do Ze");
+//            clienteEntity.setNumero("2");
+//            clienteEntity.setTelefone("1234567890");
+//
+//            RestauranteEntity restauranteEntity = new RestauranteEntity();
+//            restauranteEntity.setNome("Restaurante do Ze");
+//            restauranteEntity.setEmail("restauranteze@teste.com.br");
+//            restauranteEntity.setLogradouro("rua do ze");
+//            restauranteEntity.setBairro("bairro do ze");
+//            restauranteEntity.setCep("12345678");
+//            restauranteEntity.setUf("SP");
+//            restauranteEntity.setCidade("Cidade do Ze");
+//            restauranteEntity.setNumero("2");
+//            restauranteEntity.setTelefone("1234567890");
 
             List<MesaEntity> mesasDisponiveis = new ArrayList<>();
             mesasDisponiveis.add(new MesaEntity(1L, 1L, "4", Status_Mesa.DISPONIVEL));
@@ -173,11 +174,11 @@ public class ReservaServiceTest {
         @Test
         void cadastrar_quandoRestauranteNaoExiste_deveRetornarNotFound() {
             // Arrange
-            Long idCliente = 1L;
-            Long idRestaurante = 1L;
+            Long idCliente = 2L;
+            Long idRestaurante = 10L;
             LocalDateTime dataHora = LocalDateTime.now();
 
-            ReservaEntity reservaEntity = new ReservaEntity(1L, 1L, 1L, dataHora, 2, 1, Status_Reserva.RESERVADO);
+            ReservaEntity reservaEntity = new ReservaEntity(1L, 2L, 10L, dataHora, 2, 1, Status_Reserva.RESERVADO);
 
             ClienteEntity clienteEntity = new ClienteEntity();
             clienteEntity.setNome("Ze");
@@ -225,11 +226,11 @@ public class ReservaServiceTest {
         @Test
         void cadastrar_quandoReservaJaExiste_deveRetornarBadRequest() {
             // Arrange
-            Long idCliente = 1L;
-            Long idRestaurante = 1L;
+            Long idCliente = 2L;
+            Long idRestaurante = 3L;
             LocalDateTime dataHora = LocalDateTime.now();
 
-            ReservaEntity reservaEntity = new ReservaEntity(1L, 1L, 1L, dataHora, 2, 1, Status_Reserva.RESERVADO);
+            ReservaEntity reservaEntity = new ReservaEntity(3L, 2L, 3L, dataHora, 2, 1, Status_Reserva.RESERVADO);
 
             ClienteEntity clienteEntity = new ClienteEntity();
             clienteEntity.setNome("Ze");
@@ -277,16 +278,16 @@ public class ReservaServiceTest {
         @Test
         void atualizar_quandoReservaValida_deveRetornarOk() {
             // Arrange
-            Long idCliente = 1L;
-            Long idRestaurante = 2L;
+            Long idCliente = 2L;
+            Long idRestaurante = 3L;
             Long idReserva = 3L;
             LocalDateTime dataHora = LocalDateTime.now();
-            DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto = new DadosAtualizacaoReservaDto(idReserva, idCliente, idRestaurante, dataHora, 3, 2, Status_Reserva.RESERVADO);
+            DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto = new DadosAtualizacaoReservaDto(idReserva, idCliente, idRestaurante, dataHora, 1, 1, Status_Reserva.RESERVADO);
 
-            ReservaEntity reservaEntity = new ReservaEntity(1L, 1L, 1L, dataHora, 2, 1, Status_Reserva.RESERVADO);
+            ReservaEntity reservaEntity = new ReservaEntity(3L, 2L, 3L, dataHora, 1, 1, Status_Reserva.RESERVADO);
 
             ClienteEntity clienteEntity = new ClienteEntity();
-            clienteEntity.setNome("Ze");
+            clienteEntity.setNome("Zezao");
             clienteEntity.setEmail("ze@teste.com.br");
             clienteEntity.setLogradouro("rua do ze");
             clienteEntity.setBairro("bairro do ze");
@@ -306,6 +307,7 @@ public class ReservaServiceTest {
             restauranteEntity.setCidade("Cidade do Ze");
             restauranteEntity.setNumero("2");
             restauranteEntity.setTelefone("1234567890");
+            restauranteEntity.setCozinha("japonesa");
 
             when(clienteRepository.existsById(idCliente)).thenReturn(true);
             when(restauranteRepository.existsById(idRestaurante)).thenReturn(true);
@@ -331,7 +333,7 @@ public class ReservaServiceTest {
             // Arrange
             Long idCliente = 1L;
             Long idRestaurante = 2L;
-            Long idReserva = 3L;
+            Long idReserva = 2L;
             LocalDateTime dataHora = LocalDateTime.now();
             DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto = new DadosAtualizacaoReservaDto(idReserva, idCliente, idRestaurante, dataHora, 3, 2, Status_Reserva.FINALIZADO);
 
@@ -362,8 +364,8 @@ public class ReservaServiceTest {
             // Arrange
             Pageable pageable = PageRequest.of(0, 10);
             List<ReservaEntity> reservas = new ArrayList<>();
-            reservas.add(new ReservaEntity(1L, 1L, 2L, LocalDateTime.now(), 2, 1, Status_Reserva.RESERVADO));
-            reservas.add(new ReservaEntity(2L, 1L, 2L, LocalDateTime.now(), 2, 1, Status_Reserva.FINALIZADO));
+            reservas.add(new ReservaEntity(1L, 2L, 3L, LocalDateTime.now(), 2, 1, Status_Reserva.RESERVADO));
+            reservas.add(new ReservaEntity(2L, 2L, 3L, LocalDateTime.now(), 2, 1, Status_Reserva.FINALIZADO));
             Page<ReservaEntity> page = new org.springframework.data.domain.PageImpl<>(reservas, pageable, reservas.size());
             when(reservaRepository.findAll(any(Pageable.class))).thenReturn(page);
 
@@ -384,7 +386,10 @@ public class ReservaServiceTest {
         void obterPorCodigo_quandoReservaExiste_deveRetornarOk() {
             // Arrange
             Long codigo = 1L;
-            ReservaEntity reservaEntity = new ReservaEntity(codigo, 1L, 2L, LocalDateTime.now(), 2, 1, Status_Reserva.RESERVADO);
+            ReservaEntity reservaEntity = new ReservaEntity(codigo, 3L, 2L, LocalDateTime.now(), 2, 1, Status_Reserva.RESERVADO);
+
+            when(reservaRepository.existsById(codigo)).thenReturn(true);
+
             when(reservaRepository.existsById(codigo)).thenReturn(true);
             when(reservaRepository.getReferenceById(codigo)).thenReturn(reservaEntity);
 

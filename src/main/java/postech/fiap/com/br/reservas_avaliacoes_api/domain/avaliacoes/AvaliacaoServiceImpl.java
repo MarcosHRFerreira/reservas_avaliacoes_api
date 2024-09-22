@@ -34,9 +34,9 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     @Transactional
     public ResponseEntity<Object> cadastrar(AvaliacaoEntity avaliacaoEntity) {
         try {
-            if (!clienteRepository.existsById(avaliacaoEntity.getidcliente())) {
-                throw new ValidacaoException("Id do Cliente informado não existe!");
-            }
+
+            validarClienteExistente(avaliacaoEntity.getidcliente());
+
             if (!restauranteRepository.existsById(avaliacaoEntity.getidrestaurante())) {
                 throw new ValidacaoException("Id do Restaurante informado não existe!");
             }
@@ -56,9 +56,9 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     @Override
     public ResponseEntity atualizar(DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto) {
         try {
-            if (!avaliacaoRepository.existsById(dadosAtualizacaoAvalizacaoDto.idcliente())) {
-                throw new ValidacaoException("Id do Cliente informado não existe!");
-            }
+
+            validarClienteExistente(dadosAtualizacaoAvalizacaoDto.idcliente());
+
             if (!avaliacaoRepository.existsById(dadosAtualizacaoAvalizacaoDto.idrestaurante())) {
                 throw new ValidacaoException("Id do Restaurante informado não existe!");
             }
@@ -174,5 +174,13 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    private void validarClienteExistente(Long idCliente) {
+        if (!clienteRepository.existsById(idCliente)) {
+            throw new ValidacaoException("Id do Cliente informado não existe!");
+        }
+    }
+
+
 }
 

@@ -40,9 +40,9 @@ public class ClienteServiceImpl implements ClienteService {
     @Transactional
     public ResponseEntity<Object> atualizar(DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto) {
         try {
-            if (!clienteRepository.existsById(dadosAtualizacaoClienteDto.idcliente())) {
-                throw new ValidacaoException("Id do Cliente informado não existe!");
-            }
+
+            validarClienteExistente(dadosAtualizacaoClienteDto.idcliente());
+
             var cliente=clienteRepository.getReferenceById (dadosAtualizacaoClienteDto.idcliente());
             cliente.atualizarInformacoes(dadosAtualizacaoClienteDto);
             return ResponseEntity.ok(new DadosDetalhamentoClienteDto(cliente));
@@ -65,16 +65,20 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public ResponseEntity<Object> obterPorCodigo(Long codigo) {
         try {
-             if(!clienteRepository.existsById(codigo))
-             {
-                 throw new ValidacaoException("Id do Cliente informado não existe!");
-             }
+
+            validarClienteExistente(codigo);
+
              var cliente = clienteRepository.getReferenceById(codigo);
              return ResponseEntity.ok(new DadosDetalhamentoClienteDto(cliente));
 
         }catch (ValidacaoException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
+        }
+    }
+    private void validarClienteExistente(Long idCliente) {
+        if (!clienteRepository.existsById(idCliente)) {
+            throw new ValidacaoException("Id do Cliente informado não existe!");
         }
     }
 

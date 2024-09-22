@@ -13,7 +13,6 @@ import postech.fiap.com.br.reservas_avaliacoes_api.domain.clientes.ClienteReposi
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.MesaEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.MesaRepository;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.mesas.Status_Mesa;
-import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteEntity;
 import postech.fiap.com.br.reservas_avaliacoes_api.domain.restaurantes.RestauranteRepository;
 import postech.fiap.com.br.reservas_avaliacoes_api.exception.ValidacaoException;
 
@@ -47,12 +46,10 @@ public class ReservaServiceImpl implements ReservaService {
                 throw new ValidacaoException("Os campos esperados são: idcliente, idrestaurante, datahora, numeropessoas, numeromesas, status");
             }
 
-            if (!clienteRepository.existsById(reservaEntity.getIdcliente())) {
-                throw new ValidacaoException("Id do Cliente informado não existe!");
-            }
-            if (!restauranteRepository.existsById(reservaEntity.getIdrestaurante())) {
-                throw new ValidacaoException("Id do Restaurante informado não existe!");
-            }
+             validarClienteExistente(reservaEntity.getIdcliente());
+
+            validarRestauranteExistente(reservaEntity.getIdrestaurante());
+
             if (reservaRepository.findByid_clienteAndid_restauranteAnddata_reserva(
                     reservaEntity.getIdcliente(),
                     reservaEntity.getIdrestaurante(),
@@ -94,18 +91,11 @@ public class ReservaServiceImpl implements ReservaService {
                 throw new ValidacaoException("Os campos esperados são: idcliente, idrestaurante, datahora, numeropessoas, numeromesas, status");
             }
 
+            validarClienteExistente(dadosAtualizacaoReservaDto.idcliente());
 
-            if (!clienteRepository.existsById(dadosAtualizacaoReservaDto.idcliente())) {
-                throw new ValidacaoException("Id do Cliente informado não existe!");
-            }
-            if (!restauranteRepository.existsById(dadosAtualizacaoReservaDto.idrestaurante())) {
-                throw new ValidacaoException("Id do Restaurante informado não existe!");
-            }
-            if (!reservaRepository.existsById(dadosAtualizacaoReservaDto.idreserva())) {
-                throw new ValidacaoException("Id da Reserva informado não existe!");
-            }
+            validarRestauranteExistente(dadosAtualizacaoReservaDto.idrestaurante());
 
-            // Atualizar os dados da reserva com os dados do DTO
+            validarReservaExistente(dadosAtualizacaoReservaDto.idreserva());
 
             ReservaEntity reservaEntity = new ReservaEntity();
 
@@ -168,9 +158,9 @@ public class ReservaServiceImpl implements ReservaService {
     public ResponseEntity<Object> obterPorCodigo(Long codigo) {
 
         try {
-            if(!reservaRepository.existsById(codigo)){
-                throw new ValidacaoException("Id da Reserva informado não existe!");
-            }
+
+            validarReservaExistente(codigo);
+
             var reserva= reservaRepository.getReferenceById(codigo);
             return ResponseEntity.ok(new DadosDetalhamentoReservaDto(reserva));
         }catch (ValidacaoException e){
@@ -257,5 +247,23 @@ public class ReservaServiceImpl implements ReservaService {
         // Se todas as validações passarem, retorna null para indicar sucesso
         return null;
     }
+
+    public void validarClienteExistente(Long idcliente) {
+        if (!clienteRepository.existsById(idcliente)) {
+            throw new ValidacaoException("Id do Cliente informado não existe!");
+        }
+    }
+
+    public void validarRestauranteExistente(Long idrestaurante) {
+        if (!restauranteRepository.existsById(idrestaurante)) {
+            throw new ValidacaoException("Id do Restaurante informado não existe!");
+        }
+    }
+    public void validarReservaExistente(Long idreserva) {
+        if (!reservaRepository.existsById(idreserva)) {
+            throw new ValidacaoException("Id da Reserva informado não existe!");
+        }
+    }
+
 
 }
