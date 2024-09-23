@@ -24,6 +24,6 @@ LABEL name="Tech Chalenger"
 EXPOSE 8080
 
 # Copie o JAR da primeira etapa
-COPY --from=build /workspace/target/Tech-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /workspace/target/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
