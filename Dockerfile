@@ -1,18 +1,27 @@
+ # Primeira etapa: Construir a aplicação
+FROM openjdk:17-jdk-alpine
 
-FROM maven:3.8.7-eclipse-temurin-19-alpine
+WORKDIR /workspace
 
-WORKDIR /app
+# Copie o pom.xml e baixe as dependências, isso melhora o cache do Docker
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-COPY . .
+# Copie o código fonte e construa o JAR
+COPY src src
+ARG MAVEN_SKIP_TEST=false
+RUN if [ "$MAVEN_SKIP_TEST" = "true" ] ; then mvn clean package -DskipTests ; else mvn clean package ; fi
 
-RUN mvn package
+# Segunda etapa: Rodar a aplicação
+FROM openjdk:17-jdk-alpine
 
-# Expose default Spring Boot port
+LABEL maintainer="marcos@marcos.net"
+LABEL version="1.0"
+LABEL description="FIAP - Tech Chalenger"
+LABEL name="Reservas_Avaliacoes"
+
 EXPOSE 8080
+# Copie o JAR da primeira etapa
+COPY /target/reservas_avaliacoes_api.jar app.jar
 
-# Run the jar file
-CMD ["java", "-jar", "target/myapp-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
-
-
-
-
+ENTRYPOINT ["java", "-jar", "/app.jar"]
