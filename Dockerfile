@@ -1,8 +1,18 @@
-FROM ubuntu:latest
+
+FROM maven:3.8.7-eclipse-temurin-19-alpine
+
 WORKDIR /app
-COPY src src
-COPY pom.xml pom.xml
-RUN apt-get update && apt-get install -y maven
+
+COPY . .
+
 RUN mvn package
+
+# Expose default Spring Boot port
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/reservas_avaliacoes_api.jar"]
+
+# Run the jar file
+CMD ["java", "-jar", "target/myapp-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
+
+
+
+
