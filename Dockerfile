@@ -1,6 +1,5 @@
-
  # Primeira etapa: Construir a aplicação
-FROM amazoncorretto:17
+FROM openjdk:17-jdk-alpine
 
 WORKDIR /workspace
 
@@ -14,16 +13,15 @@ ARG MAVEN_SKIP_TEST=false
 RUN if [ "$MAVEN_SKIP_TEST" = "true" ] ; then mvn clean package -DskipTests ; else mvn clean package ; fi
 
 # Segunda etapa: Rodar a aplicação
-FROM amazoncorretto:17
+FROM openjdk:17-jdk-alpine
 
 LABEL maintainer="marcos@marcos.net"
 LABEL version="1.0"
 LABEL description="FIAP - Tech Chalenger"
-LABEL name="Tech Chalenger"
+LABEL name="Reservas_Avaliacoes_api"
 
 EXPOSE 8080
-
 # Copie o JAR da primeira etapa
-COPY --from=build /workspace/target/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /workspace/target/reservas_avaliacoes_api.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
