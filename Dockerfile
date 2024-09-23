@@ -13,7 +13,7 @@ FROM openjdk:17-jdk-alpine
 EXPOSE 8080
 
 
-COPY target/reservas_avaliacoes_api.jar /app/app.jar
+COPY --from=build /target/reservas_avaliacoes_api.jar /app/app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
 
