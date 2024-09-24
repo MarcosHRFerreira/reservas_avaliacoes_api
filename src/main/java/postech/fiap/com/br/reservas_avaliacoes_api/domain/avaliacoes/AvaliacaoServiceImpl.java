@@ -1,6 +1,7 @@
 package postech.fiap.com.br.reservas_avaliacoes_api.domain.avaliacoes;
 
 import jakarta.validation.ValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
     private final RestauranteRepository restauranteRepository;
     private final ClienteRepository clienteRepository;
 
+    @Autowired
     public AvaliacaoServiceImpl(AvaliacaoRepository avaliacaoRepository, RestauranteRepository restauranteRepository, ClienteRepository clienteRepository) {
         this.avaliacaoRepository = avaliacaoRepository;
         this.restauranteRepository = restauranteRepository;
