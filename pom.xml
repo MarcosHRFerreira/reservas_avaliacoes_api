@@ -134,7 +134,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>posttech.fiap.com.br.reservas_avaliacoes_api</mainClass>
+							<mainClass>ReservasAvaliacoesApiApplication</mainClass>
 						</manifest>
 					</archive>
 					<excludes>
