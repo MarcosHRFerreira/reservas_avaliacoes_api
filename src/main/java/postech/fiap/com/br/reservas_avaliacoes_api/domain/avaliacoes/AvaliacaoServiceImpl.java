@@ -121,7 +121,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         }
 
     }
-
+    @Override
     public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30Dias(Long idRestaurante) {
 
         try {
@@ -146,11 +146,12 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
         }
 
     }
-
+    @Override
     public ResponseEntity<List<EstatisticaRestauranteDto>> getEstatisticasRestauranteUltimos30DiasTodos() {
 
         return getEstatisticasRestauranteUltimos30Dias(null);
     }
+
 
     private ResponseEntity<List<EstatisticaRestauranteDto>> processarResultados(List<Object[]> resultados) {
         if (resultados.isEmpty()) {
