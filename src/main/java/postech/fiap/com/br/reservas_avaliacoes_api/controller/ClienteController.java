@@ -22,7 +22,7 @@ public class ClienteController {
     public ClienteController(ClienteService clienteService) {
         this.clienteService = clienteService;
     }
-    @PostMapping(value = "/cadastrar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cadastrar") //,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Object> cadastrar(@Valid @RequestBody ClienteEntity clienteEntity){
         try {
@@ -31,7 +31,7 @@ public class ClienteController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PutMapping(value = "/atualizar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/atualizar") //,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> atualizar(@Valid @RequestBody DadosAtualizacaoClienteDto dadosAtualizacaoClienteDto) {
 
         try {

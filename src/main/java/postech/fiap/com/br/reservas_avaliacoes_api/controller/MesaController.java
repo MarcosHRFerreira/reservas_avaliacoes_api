@@ -29,12 +29,12 @@ public class MesaController {
         this.restauranteRepository = restauranteRepository;
     }
 
-    @PostMapping(value = "/cadastrar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cadastrar")//,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Object> cadastrar(@RequestBody MesaEntity mesaEntity){
         return this.mesaService.cadastrar(mesaEntity);
     }
-    @PutMapping(value = "/atualizar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/atualizar")//,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> atualizar(@Valid @RequestBody DadosAtualizacaoMesaDto dadosAtualizacaoMesaDto) {
         return this.mesaService.atualizar(dadosAtualizacaoMesaDto);
     }

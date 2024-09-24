@@ -28,7 +28,7 @@ public class AvaliacaoController {
         this.avaliacaoService = avaliacaoService;
     }
 
-    @PostMapping(value = "/cadastrar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cadastrar") // consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Object> cadastrar(@RequestBody AvaliacaoEntity avaliacaoEntity) {
         try {
@@ -38,7 +38,7 @@ public class AvaliacaoController {
         }
     }
 
-    @PutMapping(value = "/atualizar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/atualizar")//, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> atualizar(@Valid @RequestBody DadosAtualizacaoAvaliacaoDto dadosAtualizacaoAvalizacaoDto) {
         try {
             return this.avaliacaoService.atualizar(dadosAtualizacaoAvalizacaoDto);

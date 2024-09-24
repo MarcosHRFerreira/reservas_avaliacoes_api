@@ -23,7 +23,7 @@ public class RestauranteController {
     public RestauranteController(RestauranteService restauranteService) {
         this.restauranteService = restauranteService;
     }
-    @PostMapping(value = "/cadastrar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cadastrar")//,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Object> cadastrar(@Valid @RequestBody RestauranteEntity restauranteEntity){
         try {
@@ -32,7 +32,7 @@ public class RestauranteController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PutMapping(value = "/atualizar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/atualizar")//,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> atualizar(@Valid @RequestBody DadosAtualizacaoRestauranteDto dadosAtualizacaoRestauranteDto) {
         try {
             return this.restauranteService.atualizar(dadosAtualizacaoRestauranteDto);

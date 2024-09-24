@@ -22,7 +22,7 @@ public class ReservaController {
     public ReservaController(ReservaService reservaService) {
         this.reservaService = reservaService;
     }
-    @PostMapping(value = "/cadastrar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cadastrar") //,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity cadastrar(@RequestBody ReservaEntity reservaEntity){
         try {
@@ -31,7 +31,7 @@ public class ReservaController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PutMapping(value = "/atualizar",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/atualizar")//,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity atualizar(@Valid @RequestBody DadosAtualizacaoReservaDto dadosAtualizacaoReservaDto) {
         try {
             return this.reservaService.atualizar(dadosAtualizacaoReservaDto);
