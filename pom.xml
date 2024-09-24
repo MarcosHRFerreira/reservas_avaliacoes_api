@@ -127,8 +127,16 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.1.1</version>
 				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>posttech.fiap.com.br.reservas_avaliacoes_api</mainClass>
+						</manifest>
+					</archive>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
