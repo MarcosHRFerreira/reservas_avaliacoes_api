@@ -1,1 +1,1 @@
-web: java -jar target/reservas_avaliacoes_api.jar --server.port=$PORT
+web: java -jar target/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar --server.port=$PORT
