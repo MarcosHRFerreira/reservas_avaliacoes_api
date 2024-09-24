@@ -134,7 +134,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>ReservasAvaliacoesApiApplication</mainClass>
+							<mainClass>ReservasAvaliacoesApiApplication.man</mainClass>
 						</manifest>
 					</archive>
 					<excludes>
