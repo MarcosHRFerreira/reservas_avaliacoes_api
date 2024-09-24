@@ -22,6 +22,6 @@ LABEL name="Reservas_Avaliacoes"
 
 EXPOSE 8080
 # Copie o JAR da primeira etapa
-COPY /target/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar app.jar
+COPY /target/reservas_avaliacoes_api.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]
