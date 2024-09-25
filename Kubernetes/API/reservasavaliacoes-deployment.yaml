@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tech-app
+  name: reservasavaliacoes
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: tech-app
+      app: reservasavaliacoes
   template:
     metadata:
       labels:
-        app: tech-app
+        app: reservasavaliacoes
     spec:
       containers:
-        - name: tech-app
+        - name: reservasavaliacoes
           image: wolwer/tech-app:v3.0
           ports:
             - containerPort: 8080
