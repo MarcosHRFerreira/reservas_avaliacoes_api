@@ -17,4 +17,4 @@ LABEL description="FIAP - Tech Chalenger"
 LABEL name="Reservas_Avaliacoes"
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "/target/reservas_avaliacoes_api.jar"]
+ENTRYPOINT ["java", "-jar", "target/reservas_avaliacoes_api.jar"]
