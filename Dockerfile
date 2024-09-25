@@ -1,6 +1,6 @@
  # Primeira etapa: Construir a aplicação
 FROM openjdk:17-jdk-alpine
-WORKDIR /workspace
+WORKDIR /app
 # Copie o pom.xml e baixe as dependências, isso melhora o cache do Docker
 COPY pom.xml .
 RUN mvn dependency:go-offline
@@ -16,5 +16,5 @@ LABEL description="FIAP - Tech Chalenger"
 LABEL name="Reservas_Avaliacoes"
 EXPOSE 8080
 # Copie o JAR da primeira etapa
-COPY /target/myapp-0.0.1-SNAPSHOT.jar app.jar
+COPY target/myapp-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
