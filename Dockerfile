@@ -17,4 +17,6 @@ LABEL description="FIAP - Tech Chalenger"
 LABEL name="Reservas_Avaliacoes"
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "target/reservas_avaliacoes_api.jar"]
+COPY --from=build /workspace/target/reservas_avaliacoes_api.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "/app.jar"]
