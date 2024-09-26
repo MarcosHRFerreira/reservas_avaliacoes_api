@@ -25,3 +25,10 @@ services:
     ports:
       - "5432:5432"
 
+x-compose-service-network:
+  start:
+    - docker-compose up -d
+  stop:
+    - docker-compose down
+  logs:
+    - docker-compose logs
