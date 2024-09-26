@@ -13,7 +13,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/reservas_avaliacoes_api
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: my-secret-pw
+      SPRING_DATASOURCE_PASSWORD: admin
       SPRING_PROFILES_ACTIVE: prod
 
   postgres:
