@@ -1,8 +1,8 @@
 app:
-  name: tech-app
+  name: reservas_avalicaoes_api
   replicaCount: 3
   image:
-    repository: wolwer/tech-app
+    repository: wolwer/reservas_avalicaoes_api
     tag: v3.0
     pullPolicy: IfNotPresent
   service:
@@ -21,40 +21,7 @@ app:
         name: my-secret
         key: DATA_PASSWORD
   springProfilesActive: prod
-  resources:
-    requests:
-      cpu: "100m"
-  autoscaling:
-    minReplicas: 1
-    maxReplicas: 10
-    targetCPUUtilizationPercentage: 50
-  ingress:
-    enabled: true
-    annotations: {}
-    hosts:
-      - host: localhost
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-    tls: []
-  probes:
-    livenessProbe:
-      httpGet:
-        path: /actuator/health
-        port: 8080
-      initialDelaySeconds: 380
-      periodSeconds: 30
-    readinessProbe:
-      httpGet:
-        path: /actuator/health
-        port: 8080
-      initialDelaySeconds: 380
-      periodSeconds: 30
-hpa:
-  name: tech-app-hpa
-  minReplicas: 1
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 90
+
 postgres:
   name: postgres
   replicaCount: 1
