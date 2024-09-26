@@ -23,7 +23,7 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: reservas_avaliacoes_api
     ports:
-      - "5432:5432"
+      - "5433:5433"
 
 x-compose-service-network:
   start:
