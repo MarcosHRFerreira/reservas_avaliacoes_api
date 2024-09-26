@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: my-configmap
-data:
-  DATA_HOST: "postgres"
-  DATA_PORT: "5432"
-  DATA_DATABASE: "reservas_avaliacoes_api"
