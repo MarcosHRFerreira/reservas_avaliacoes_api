@@ -1,34 +1,20 @@
 version: '3.9'
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - MAVEN_SKIP_TEST=true
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres_service/reservas_avaliacoes_api
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: admin
-      SPRING_PROFILES_ACTIVE: prod
-
-  postgres:
+  postgres-db:
     image: postgres:latest
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: reservas_avaliacoes_api
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: reservas_avaliacoes_api
 
-x-compose-service-network:
-  start:
-    - docker-compose up -d
-  stop:
-    - docker-compose down
-  logs:
-    - docker-compose logs
+  spring-app:
+    image: backend-reservas_avaliacoes_api:lastest
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/reservas_avaliacoes_api
+
+    depends_on:
+      - postgres-db
