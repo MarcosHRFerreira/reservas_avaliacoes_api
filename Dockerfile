@@ -3,5 +3,3 @@ COPY . .
 RUN chmod +x ./mvnw
 RUN ./mvnw install -DskipTests
 ENTRYPOINT ["java", "-jar", "/myapp-0.0.1-SNAPSHOT.jar"]
-
-
