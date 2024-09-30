@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   postgres-db:
-    image: postgres:latest
+    image: postgres:15
     ports:
       - "5432:5432"
     environment:
@@ -9,3 +9,11 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: reservas_avaliacoes_api
 
+  spring-app:
+      image: backend-reservas_avaliacoes_api:lastest
+      ports:
+        - "8080:8080"
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/reservas_avaliacoes_api
+      depends_on:
+        - postgres-db
