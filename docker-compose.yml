@@ -9,7 +9,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=reservas_db
+      - POSTGRES_DB=reservas_avaliacoes_api
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
