@@ -3,6 +3,6 @@ COPY . .
 RUN chmod +x ./mvnw
 RUN ./mvnw install -DskipTests
 
-CMD ["java", "-jar", "target/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
+CMD java ${ADDITIONAL_OPTS} -jar target/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod]
 
 ENTRYPOINT ["java", "-jar", "reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar"]
