@@ -1,24 +1,9 @@
 
- # Primeira etapa: Construir a aplicação
-FROM maven:3.9.9-amazoncorretto-17 AS build
-WORKDIR /workspace
-# Copie o pom.xml e baixe as dependências, isso melhora o cache do Docker
-COPY pom.xml .
-RUN mvn dependency:go-offline
-# Copie o código fonte e construa o JAR
-COPY src src
+FROM eclipse-temurin:17.0.8.1_1-jdk-jammy
+COPY . .
+RUN chmod +x ./mvnw
+RUN ./mvnw install -DskipTests
 
-RUN mvn clean package -DskipTests
+CMD ["java", "-jar", "target/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
 
-# Segunda etapa: Rodar a aplicação
-FROM amazoncorretto:17-alpine-jdk
-LABEL maintainer="marcos@marcos.net"
-LABEL version="1.0"
-LABEL description="FIAP - Tech Chalenger"
-LABEL name="Reservas_Avaliacoes"
-EXPOSE 8080
-
-COPY --from=build /workspace/target/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "/app.jar"]
-
+ENTRYPOINT ["java", "-jar", "/reservas_avaliacoes_api-0.0.1-SNAPSHOT.jar"]
